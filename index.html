@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10L DOSSIERS // Corporate Intelligence Archive</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+:root{
+  --ink:#0a0a0b;--char:#141416;--ash:#1e1e22;--smoke:#2a2a30;--mist:#3d3d45;
+  --bone:#b8b8c0;--ghost:#8a8a94;--rust:#c45c3a;--ember:#d4a04a;--blood:#8b3030;
+  --moss:#4a7c5c;--frost:#6a8aaa;--violet:#7a5a8a;--gold:#b89a5a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);color:var(--bone);font-family:'JetBrains Mono',monospace;
+  font-size:13px;line-height:1.7;overflow-x:hidden;min-height:100vh;
+}
+::selection{background:var(--rust);color:#fff}
+
+body::before{
+  content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.15) 2px,rgba(0,0,0,0.15) 4px);
+  pointer-events:none;z-index:9999;opacity:0.4;
+}
+
+.header{
+  position:relative;padding:80px 20px 50px;text-align:center;
+  background:linear-gradient(180deg,var(--char) 0%,var(--ink) 100%);
+  border-bottom:1px solid var(--smoke);overflow:hidden;
+}
+.header::after{
+  content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--rust),var(--ember),var(--frost),transparent);
+  animation:scan 5s linear infinite;
+}
+@keyframes scan{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+.header h1{
+  font-family:'Playfair Display',serif;font-size:clamp(2.2rem,6vw,4.5rem);
+  font-weight:700;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--bone);text-shadow:0 0 50px rgba(196,92,58,0.25);
+}
+.header .sub{
+  font-size:11px;letter-spacing:0.5em;color:var(--ghost);margin-top:14px;
+  text-transform:uppercase;
+}
+.header .tagline{
+  font-family:'Playfair Display',serif;font-size:15px;color:var(--ember);
+  margin-top:18px;font-style:italic;letter-spacing:0.05em;
+}
+.header .stamp{
+  display:inline-block;margin-top:24px;padding:6px 20px;border:1px solid var(--blood);
+  color:var(--blood);font-size:10px;letter-spacing:0.3em;text-transform:uppercase;
+  transform:rotate(-1.5deg);opacity:0.7;
+}
+
+.container{max-width:1000px;margin:0 auto;padding:0 20px}
+
+.intro{
+  text-align:center;padding:50px 20px 30px;max-width:700px;margin:0 auto;
+}
+.intro p{
+  font-size:12.5px;color:var(--ghost);line-height:2;letter-spacing:0.02em;
+}
+.intro p strong{color:var(--bone);font-weight:400}
+
+.dossiers{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:24px;margin:20px 0 60px;
+}
+.dossier-card{
+  background:var(--char);border:1px solid var(--smoke);padding:0;
+  position:relative;overflow:hidden;transition:all 0.3s ease;
+  cursor:pointer;text-decoration:none;display:block;
+}
+.dossier-card:hover{
+  border-color:var(--mist);transform:translateY(-4px);
+  box-shadow:0 20px 40px rgba(0,0,0,0.4);
+}
+.dossier-card::before{
+  content:'';position:absolute;top:0;left:0;width:100%;height:3px;
+}
+.dossier-card.infosys::before{background:linear-gradient(90deg,var(--frost),var(--ember))}
+.dossier-card.indigo::before{background:linear-gradient(90deg,var(--rust),var(--ember))}
+.dossier-card.icici::before{background:linear-gradient(90deg,var(--blood),var(--violet))}
+
+.card-header{
+  padding:28px 24px 20px;border-bottom:1px solid var(--smoke);
+}
+.card-num{
+  font-size:10px;letter-spacing:0.3em;color:var(--ghost);
+  text-transform:uppercase;margin-bottom:8px;
+}
+.card-title{
+  font-family:'Playfair Display',serif;font-size:22px;color:var(--bone);
+  line-height:1.3;
+}
+.card-sub{
+  font-size:11px;color:var(--ghost);margin-top:6px;letter-spacing:0.05em;
+}
+
+.card-body{
+  padding:20px 24px 24px;
+}
+.card-stats{
+  display:flex;gap:16px;margin-bottom:16px;
+}
+.stat{
+  text-align:center;
+}
+.stat-num{
+  font-family:'Playfair Display',serif;font-size:20px;color:var(--ember);
+  line-height:1;
+}
+.stat-label{
+  font-size:9px;color:var(--ghost);letter-spacing:0.15em;
+  text-transform:uppercase;margin-top:4px;
+}
+.card-desc{
+  font-size:11.5px;color:var(--ghost);line-height:1.8;
+}
+.card-desc strong{color:var(--bone);font-weight:400}
+
+.card-cta{
+  padding:14px 24px;border-top:1px solid var(--smoke);
+  font-size:10px;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--ember);display:flex;align-items:center;gap:8px;
+}
+.dossier-card:hover .card-cta{color:var(--rust)}
+
+.footer{
+  text-align:center;padding:50px 20px 40px;border-top:1px solid var(--smoke);
+  color:var(--ghost);font-size:11px;letter-spacing:0.2em;
+}
+.footer .seal{
+  width:50px;height:50px;border:1px solid var(--smoke);border-radius:50%;
+  margin:0 auto 16px;display:flex;align-items:center;justify-content:center;
+  font-size:18px;color:var(--ember);
+}
+
+@media(max-width:600px){
+  .card-stats{flex-direction:column;gap:10px}
+  .stat{text-align:left;display:flex;align-items:center;gap:10px}
+  .stat-label{margin-top:0}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="sub">Intelligence Archive // Corporate Governance Protocols</div>
+  <h1>10L DOSSIERS</h1>
+  <div class="tagline">Three fractures. No verdicts. Only the architecture of power.</div>
+  <div class="stamp">RESTRICTED ACCESS</div>
+</div>
+
+<div class="container">
+
+<div class="intro">
+  <p>What follows is not analysis. It is a <strong>geopolitical map</strong> of three Indian corporate entities at war with themselves — where founders, CEOs, boards, regulators, and whistleblowers each operated on intelligence the others could not see. <strong>No one was wrong.</strong> Everyone was scoring on a different board.</p>
+</div>
+
+<div class="dossiers">
+
+  <a href="infosys/" class="dossier-card infosys">
+    <div class="card-header">
+      <div class="card-num">DOSSIER 01</div>
+      <div class="card-title">INFOSYS</div>
+      <div class="card-sub">The Sikka–Murthy Protocol</div>
+    </div>
+    <div class="card-body">
+      <div class="card-stats">
+        <div class="stat"><div class="stat-num">7</div><div class="stat-label">Factions</div></div>
+        <div class="stat"><div class="stat-num">$320M</div><div class="stat-label">Acquisitions</div></div>
+        <div class="stat"><div class="stat-num">3</div><div class="stat-label">Years</div></div>
+      </div>
+      <div class="card-desc">
+        <strong>Sikka</strong> vs. <strong>Murthy</strong> vs. <strong>Board</strong> vs. <strong>Bansal</strong> vs. <strong>Whistleblower</strong> vs. <strong>Kennedy</strong> vs. <strong>Founders' Camp</strong>. Seven scoreboards. One company. The Panaya acquisition, the Bansal severance, the Gibson Dunn clean chit, and the resignation that ended it all.
+      </div>
+    </div>
+    <div class="card-cta">ENTER ARCHIVE &rarr;</div>
+  </a>
+
+  <a href="indigo/" class="dossier-card indigo">
+    <div class="card-header">
+      <div class="card-num">DOSSIER 02</div>
+      <div class="card-title">INDIGO</div>
+      <div class="card-sub">The Bhatia–Gangwal Protocol</div>
+    </div>
+    <div class="card-body">
+      <div class="card-stats">
+        <div class="stat"><div class="stat-num">2</div><div class="stat-label">Founders</div></div>
+        <div class="stat"><div class="stat-num">6+</div><div class="stat-label">Years</div></div>
+        <div class="stat"><div class="stat-num">LCIA</div><div class="stat-label">Tribunal</div></div>
+      </div>
+      <div class="card-desc">
+        <strong>Bhatia</strong> took six times the contractual risk. <strong>Gangwal</strong> approved accounts for 13 years, then blew the whistle on RPTs. SEBI found lapses. LCIA unlocked the cage. Gangwal sold everything. Bhatia kept the airline. The locks were designed by both.
+      </div>
+    </div>
+    <div class="card-cta">ENTER ARCHIVE &rarr;</div>
+  </a>
+
+  <a href="icici/" class="dossier-card icici">
+    <div class="card-header">
+      <div class="card-num">DOSSIER 03</div>
+      <div class="card-title">ICICI BANK</div>
+      <div class="card-sub">The Kochhar Protocol</div>
+    </div>
+    <div class="card-body">
+      <div class="card-stats">
+        <div class="stat"><div class="stat-num">34</div><div class="stat-label">Years</div></div>
+        <div class="stat"><div class="stat-num">Rs 1,730 Cr</div><div class="stat-label">Alleged Loss</div></div>
+        <div class="stat"><div class="stat-num">3</div><div class="stat-label">Agencies</div></div>
+      </div>
+      <div class="card-desc">
+        From trainee (1984) to CEO (2009) to arrest (2022). The Videocon loan, the Rs 64 Cr quid pro quo, the board's clean chit that became termination for cause, the Srikrishna enquiry, and the tribunal that confirmed what the whistleblower saw in 2016.
+      </div>
+    </div>
+    <div class="card-cta">ENTER ARCHIVE &rarr;</div>
+  </a>
+
+</div>
+
+</div>
+
+<div class="footer">
+  <div class="seal">&#9670;</div>
+  <p>10L DOSSIERS // INTELLIGENCE ARCHIVE</p>
+  <p style="margin-top:8px;font-size:10px;color:var(--smoke)">Compiled from SEBI orders, tribunal awards, court judgments, and public disclosures.<br>No analysis. No verdict. Only the architecture of fractures.</p>
+</div>
+
+</body>
+</html>

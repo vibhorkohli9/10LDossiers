@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOSSIER // INDIGO — The Bhatia–Gangwal Protocol</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+:root{
+  --ink:#0a0a0b;--char:#141416;--ash:#1e1e22;--smoke:#2a2a30;--mist:#3d3d45;
+  --bone:#b8b8c0;--ghost:#8a8a94;--rust:#c45c3a;--ember:#d4a04a;--blood:#8b3030;
+  --moss:#4a7c5c;--frost:#6a8aaa;--violet:#7a5a8a;--gold:#b89a5a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);color:var(--bone);font-family:'JetBrains Mono',monospace;
+  font-size:13px;line-height:1.7;overflow-x:hidden;
+}
+::selection{background:var(--rust);color:#fff}
+
+/* Scanline overlay */
+body::before{
+  content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.15) 2px,rgba(0,0,0,0.15) 4px);
+  pointer-events:none;z-index:9999;opacity:0.4;
+}
+
+/* Header */
+.header{
+  position:relative;padding:60px 20px 40px;text-align:center;
+  background:linear-gradient(180deg,var(--char) 0%,var(--ink) 100%);
+  border-bottom:1px solid var(--smoke);overflow:hidden;
+}
+.header::after{
+  content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--rust),transparent);
+  animation:scan 4s linear infinite;
+}
+@keyframes scan{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.header h1{
+  font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,4rem);
+  font-weight:700;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--bone);text-shadow:0 0 40px rgba(196,92,58,0.3);
+}
+.header .sub{
+  font-size:11px;letter-spacing:0.4em;color:var(--ghost);margin-top:12px;
+  text-transform:uppercase;
+}
+.header .stamp{
+  display:inline-block;margin-top:20px;padding:6px 18px;border:1px solid var(--blood);
+  color:var(--blood);font-size:10px;letter-spacing:0.3em;text-transform:uppercase;
+  transform:rotate(-2deg);opacity:0.8;
+}
+
+/* Container */
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+
+/* Section headers */
+.section-head{
+  font-family:'Playfair Display',serif;font-size:22px;color:var(--ember);
+  margin:50px 0 20px;padding-bottom:10px;border-bottom:1px solid var(--smoke);
+  letter-spacing:0.05em;
+}
+.section-head span{color:var(--ghost);font-size:12px;font-family:'JetBrains Mono',monospace;float:right;margin-top:8px;}
+
+/* Scoreboard grid */
+.scoreboard{
+  display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:30px 0;
+}
+@media(max-width:700px){.scoreboard{grid-template-columns:1fr}}
+.score-card{
+  background:var(--char);border:1px solid var(--smoke);padding:24px;
+  position:relative;overflow:hidden;
+}
+.score-card::before{
+  content:'';position:absolute;top:0;left:0;width:4px;height:100%;
+}
+.score-card.bhatia::before{background:var(--frost)}
+.score-card.gangwal::before{background:var(--rust)}
+.score-card h3{
+  font-size:14px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:16px;
+}
+.score-card.bhatia h3{color:var(--frost)}
+.score-card.gangwal h3{color:var(--rust)}
+.score-row{
+  display:flex;justify-content:space-between;padding:8px 0;
+  border-bottom:1px dotted var(--smoke);font-size:12px;
+}
+.score-row:last-child{border-bottom:none}
+.score-row .label{color:var(--ghost)}
+.score-row .value{color:var(--bone);font-weight:500}
+.score-row .value.negative{color:var(--blood)}
+.score-row .value.positive{color:var(--moss)}
+
+/* Trap questions */
+.trap-box{
+  background:var(--char);border-left:3px solid var(--violet);padding:18px 22px;
+  margin:24px 0;font-size:12px;color:var(--ghost);position:relative;
+}
+.trap-box::before{
+  content:'?';position:absolute;top:-10px;left:14px;background:var(--violet);
+  color:var(--ink);width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;
+}
+.trap-box p{margin-left:10px;line-height:1.9}
+.trap-box strong{color:var(--bone)}
+
+/* Timeline */
+.timeline{position:relative;padding-left:30px;margin:30px 0}
+.timeline::before{
+  content:'';position:absolute;left:8px;top:0;bottom:0;width:1px;
+  background:linear-gradient(180deg,var(--ember),var(--rust),transparent);
+}
+.tl-item{position:relative;margin-bottom:28px;padding-left:20px}
+.tl-item::before{
+  content:'';position:absolute;left:-26px;top:6px;width:10px;height:10px;
+  border-radius:50%;background:var(--char);border:2px solid var(--ember);
+}
+.tl-item.bhatia::before{border-color:var(--frost)}
+.tl-item.gangwal::before{border-color:var(--rust)}
+.tl-item.both::before{border-color:var(--ember)}
+.tl-date{
+  font-size:10px;letter-spacing:0.2em;color:var(--ember);text-transform:uppercase;
+  margin-bottom:4px;
+}
+.tl-body{color:var(--bone);font-size:12.5px;line-height:1.8}
+.tl-body a{color:var(--frost);text-decoration:none;border-bottom:1px dotted var(--frost);opacity:0.7}
+.tl-body a:hover{opacity:1}
+.tl-tag{
+  display:inline-block;font-size:9px;padding:2px 8px;margin-top:8px;
+  border:1px solid var(--smoke);color:var(--ghost);letter-spacing:0.1em;text-transform:uppercase;
+}
+.tl-tag.bhatia{border-color:var(--frost);color:var(--frost)}
+.tl-tag.gangwal{border-color:var(--rust);color:var(--rust)}
+
+/* Collapsible docs */
+.collapsible{
+  background:var(--char);border:1px solid var(--smoke);margin:12px 0;overflow:hidden;
+}
+.collapsible-header{
+  padding:14px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--bone);
+  transition:background 0.2s;
+}
+.collapsible-header:hover{background:var(--ash)}
+.collapsible-header .arrow{transition:transform 0.3s;color:var(--ember)}
+.collapsible.open .arrow{transform:rotate(90deg)}
+.collapsible-body{
+  max-height:0;overflow:hidden;transition:max-height 0.4s ease;
+  background:var(--ash);
+}
+.collapsible.open .collapsible-body{max-height:2000px}
+.collapsible-body-inner{padding:20px;font-size:12px;line-height:1.9;color:var(--ghost)}
+.collapsible-body-inner blockquote{
+  border-left:2px solid var(--rust);padding-left:16px;margin:12px 0;color:var(--bone);
+  font-style:italic;
+}
+.collapsible-body-inner .doc-meta{
+  font-size:10px;color:var(--ghost);margin-bottom:12px;letter-spacing:0.1em;
+}
+
+/* Gray Zone */
+.gray-zone{
+  background:linear-gradient(135deg,var(--char) 0%,var(--ash) 100%);
+  border:1px solid var(--mist);padding:30px;margin:40px 0;position:relative;
+}
+.gray-zone::before{
+  content:'GRAY ZONE';position:absolute;top:-10px;left:20px;background:var(--ink);
+  padding:0 10px;font-size:10px;letter-spacing:0.3em;color:var(--ghost);
+}
+.gray-zone h4{
+  font-family:'Playfair Display',serif;font-size:18px;color:var(--bone);
+  margin-bottom:16px;font-style:italic;
+}
+.gray-zone p{font-size:12px;color:var(--ghost);line-height:1.9;margin-bottom:12px}
+.gray-zone .nobody-wrong{
+  text-align:center;padding:20px;border:1px dashed var(--mist);margin-top:20px;
+}
+.gray-zone .nobody-wrong span{
+  font-size:11px;letter-spacing:0.3em;color:var(--ember);text-transform:uppercase;
+}
+
+/* Casualties */
+.casualties{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:30px 0;
+}
+.cas-card{
+  background:var(--char);border:1px solid var(--blood);padding:20px;text-align:center;
+  position:relative;
+}
+.cas-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--blood),transparent);
+}
+.cas-number{
+  font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);color:var(--blood);
+  line-height:1;
+}
+.cas-label{font-size:10px;letter-spacing:0.2em;color:var(--ghost);text-transform:uppercase;margin-top:8px}
+
+/* The Triad */
+.triad{
+  margin:30px 0;
+}
+.triad-item{
+  background:var(--char);border:1px solid var(--smoke);padding:24px;margin-bottom:16px;
+  position:relative;
+}
+.triad-item::before{
+  content:attr(data-num);position:absolute;top:-12px;left:20px;background:var(--ink);
+  padding:0 10px;font-family:'Playfair Display',serif;font-size:20px;color:var(--ember);
+}
+.triad-item p{
+  font-size:12.5px;color:var(--bone);line-height:1.9;margin-top:8px;font-style:italic;
+}
+.triad-item .source{
+  font-size:10px;color:var(--ghost);margin-top:12px;letter-spacing:0.1em;
+}
+
+/* Footer */
+.footer{
+  text-align:center;padding:60px 20px 40px;border-top:1px solid var(--smoke);
+  margin-top:60px;color:var(--ghost);font-size:11px;letter-spacing:0.2em;
+}
+.footer .seal{
+  width:60px;height:60px;border:1px solid var(--smoke);border-radius:50%;
+  margin:0 auto 20px;display:flex;align-items:center;justify-content:center;
+  font-size:20px;color:var(--ember);
+}
+
+/* Glitch text effect */
+.glitch{
+  position:relative;
+}
+.glitch::before,.glitch::after{
+  content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;
+}
+.glitch::before{
+  left:2px;text-shadow:-1px 0 var(--rust);clip:rect(24px,550px,90px,0);
+  animation:glitch-anim-1 3s infinite linear alternate-reverse;
+}
+.glitch::after{
+  left:-2px;text-shadow:-1px 0 var(--frost);clip:rect(85px,550px,140px,0);
+  animation:glitch-anim-2 2.5s infinite linear alternate-reverse;
+}
+@keyframes glitch-anim-1{
+  0%{clip:rect(20px,9999px,50px,0)}20%{clip:rect(80px,9999px,110px,0)}
+  40%{clip:rect(10px,9999px,40px,0)}60%{clip:rect(60px,9999px,90px,0)}
+  80%{clip:rect(30px,9999px,70px,0)}100%{clip:rect(90px,9999px,120px,0)}
+}
+@keyframes glitch-anim-2{
+  0%{clip:rect(60px,9999px,90px,0)}20%{clip:rect(10px,9999px,40px,0)}
+  40%{clip:rect(80px,9999px,110px,0)}60%{clip:rect(30px,9999px,60px,0)}
+  80%{clip:rect(50px,9999px,80px,0)}100%{clip:rect(20px,9999px,50px,0)}
+}
+
+/* Confusion markers */
+.confuse{
+  color:var(--violet);font-style:italic;border-bottom:1px dotted var(--violet);cursor:help;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="sub">InterGlobe Aviation Ltd. // InterGlobe Enterprises Pvt. Ltd.</div>
+  <h1 class="glitch" data-text="THE INDIGO PROTOCOL">THE INDIGO PROTOCOL</h1>
+  <div class="sub">Bhatia &times; Gangwal &nbsp;&middot;&nbsp; 2006 &ndash; Present &nbsp;&middot;&nbsp; CLASSIFIED</div>
+  <div class="stamp">NO RESOLUTION DECLARED</div>
+</div>
+
+<div class="container">
+
+<!-- SCOREBOARD -->
+<div class="section-head">PRIVATE SCOREBOARD <span>// each side keeps their own ledger</span></div>
+<div class="scoreboard">
+  <div class="score-card bhatia">
+    <h3>RAHUL BHATIA // IGE GROUP</h3>
+    <div class="score-row"><span class="label">Stake Held (IGE)</span><span class="value">~38.23%</span></div>
+    <div class="score-row"><span class="label">Economic Risk Taken (Peak)</span><span class="value positive">&gt;Rs 1,100 Cr</span></div>
+    <div class="score-row"><span class="label">Board Control</span><span class="value positive">MD + CEO + Chairman</span></div>
+    <div class="score-row"><span class="label">RPT Value (FY18)</span><span class="value">~Rs 310 Cr</span></div>
+    <div class="score-row"><span class="label">SEBI Settlement Paid</span><span class="value negative">Rs 2.10 Cr</span></div>
+    <div class="score-row"><span class="label">LCIA Arbitration</span><span class="value">Filed Oct 2019</span></div>
+    <div class="score-row"><span class="label">Current Role</span><span class="value positive">MD &amp; Interim CEO</span></div>
+  </div>
+  <div class="score-card gangwal">
+    <h3>RAKESH GANGWAL // RGG GROUP</h3>
+    <div class="score-row"><span class="label">Stake Held (Peak)</span><span class="value">~37%</span></div>
+    <div class="score-row"><span class="label">Stake Held (Aug 2025)</span><span class="value negative">&lt;5%</span></div>
+    <div class="score-row"><span class="label">Block Sale (May 2025)</span><span class="value positive">Rs 6,800 Cr</span></div>
+    <div class="score-row"><span class="label">Block Sale (Aug 2025)</span><span class="value positive">Rs 7,020 Cr</span></div>
+    <div class="score-row"><span class="label">SEBI Complaint Filed</span><span class="value">July 2019</span></div>
+    <div class="score-row"><span class="label">LCIA Counter-Claim</span><span class="value">Filed Oct 2019</span></div>
+    <div class="score-row"><span class="label">Board Resignation</span><span class="value">Dec 2021</span></div>
+  </div>
+</div>
+
+<!-- TRAP QUESTIONS -->
+<div class="section-head">TRAP QUESTIONS <span>// no correct answers exist</span></div>
+
+<div class="trap-box">
+  <p><strong>Q1.</strong> If both founders held roughly equal equity (~37% each), and the SHA explicitly gave IGE Group control over MD, CEO, and Chairman appointments, was Gangwal <span class="confuse">surprised</span> by the arrangement he signed in 2006, or did he <span class="confuse">forget</span> he had agreed to it for 13 years until the RPT values crossed Rs 310 Cr?</p>
+</div>
+
+<div class="trap-box">
+  <p><strong>Q2.</strong> Bhatia claims IGE took &quot;almost six times the contractual obligation&quot; in economic risk. Gangwal claims disproportionate control. If both statements are extracted from the <span class="confuse">same shareholders agreement</span>, which clause is the <span class="confuse">original sin</span> — the risk clause or the control clause?</p>
+</div>
+
+<div class="trap-box">
+  <p><strong>Q3.</strong> The EY report on RPTs was commissioned by Chairman M. Damodaran but never shared with the full board or audit committee. If the Chairman saw it in March 2019 and Gangwal only learned of its existence later, who <span class="confuse">owns the opacity</span> — the person who commissioned the review, or the person who demanded it?</p>
+</div>
+
+<div class="trap-box">
+  <p><strong>Q4.</strong> SEBI's settlement order (Feb 2021) found in Gangwal's favour on governance lapses, yet IndiGo paid only Rs 2.10 Cr &quot;without admitting or denying guilt.&quot; Is a regulator's endorsement of a whistleblower's claims still an endorsement if the accused <span class="confuse">never admits it happened</span>?</p>
+</div>
+
+<div class="trap-box">
+  <p><strong>Q5.</strong> The LCIA tribunal (Sep 2021) ordered removal of Transfer Restriction Articles (RoFR clauses) from the AoA. Both sides had to jointly call an EGM. If both founders <span class="confuse">voted to remove the very locks they created</span>, were they undoing a mistake or completing a plan?</p>
+</div>
+
+<!-- TIMELINE -->
+<div class="section-head">CHRONOLOGY <span>// events without narrative</span></div>
+<div class="timeline">
+
+  <div class="tl-item both">
+    <div class="tl-date">2006</div>
+    <div class="tl-body">IndiGo founded by Rahul Bhatia (InterGlobe Enterprises) and Rakesh Gangwal. SHA signed: equal ownership (~37% each), IGE Group gets control rights (MD, CEO, Chairman appointments). Gangwal affiliates bound to vote with IGE on director appointments. <a href="https://blog.ipleaders.in/indigo-dispute-how-shareholders-agreement-clauses-created-a-rift-between-founders/" target="_blank">Source: LawSikho</a></div>
+    <span class="tl-tag both">Genesis</span>
+  </div>
+
+  <div class="tl-item both">
+    <div class="tl-date">Oct 2015</div>
+    <div class="tl-body">IPO raises Rs 12.7 billion. Prospectus states RoFR rights would cease post 10 Nov 2019. SHA amended twice to comply with statutory requirements. Gangwal participated in IPO knowing IGE would retain control. <a href="https://www.flightglobal.com/asia-pacific/2021/02/indigos-parent-settles-case-with-securities-regulator/" target="_blank">Source: FlightGlobal</a></div>
+    <span class="tl-tag both">IPO</span>
+  </div>
+
+  <div class="tl-item gangwal">
+    <div class="tl-date">Jul 2019</div>
+    <div class="tl-body">Gangwal files 49-page complaint with SEBI alleging: (a) corporate governance violations, (b) undisclosed related-party transactions with IGE Group entities, (c) misrepresentation in 2015 prospectus, (d) failure to disclose material information. Stock drops 19%. <a href="https://regstreetlaw.com/news/with-the-indigo-indictment-has-sebi-changed-the-rules-ofthe-game-the-morning-context/" target="_blank">Source: RegStreet / Morning Context</a></div>
+    <span class="tl-tag gangwal">Offensive</span>
+  </div>
+
+  <div class="tl-item bhatia">
+    <div class="tl-date">Jul 2019</div>
+    <div class="tl-body">Bhatia / IGE responds: Gangwal's allegations are a &quot;smokescreen&quot; to dilute IGE's controlling rights. Claims Gangwal knew and accepted the control structure for 13 years, approved annual accounts, and only objected when RPT values grew 10x. Points to peak IGE economic risk of Rs 1,100+ Cr. <a href="https://blog.ipleaders.in/indigo-dispute-how-shareholders-agreement-clauses-created-a-rift-between-founders/" target="_blank">Source: LawSikho</a></div>
+    <span class="tl-tag bhatia">Counter</span>
+  </div>
+
+  <div class="tl-item both">
+    <div class="tl-date">Aug 2019</div>
+    <div class="tl-body">AGM held. Board expanded from 6 to 10 directors. Women directors added. New RPT policy adopted. CEO Ronojoy Dutta emails employees: feud &quot;satisfactorily sorted out.&quot; Gangwal remains unconvinced. <a href="https://blog.ipleaders.in/indigo-dispute-how-shareholders-agreement-clauses-created-a-rift-between-founders/" target="_blank">Source: LawSikho</a></div>
+    <span class="tl-tag both">Truce?</span>
+  </div>
+
+  <div class="tl-item bhatia">
+    <div class="tl-date">Oct 2019</div>
+    <div class="tl-body">Bhatia files arbitration request at London Court of International Arbitration (LCIA) against Gangwal &amp; affiliates (Chinkerpoo Family Trust, Shobha Gangwal) for compliance with SHA and AoA. IndiGo named as respondent. No monetary claim against airline. <a href="https://www.thehindubusinessline.com/economy/logistics/indigos-rahul-bhatia-moves-london-court-for-arbitration/article29572982.ece" target="_blank">Source: Hindu BusinessLine</a></div>
+    <span class="tl-tag bhatia">LCIA</span>
+  </div>
+
+  <div class="tl-item gangwal">
+    <div class="tl-date">Oct 2019</div>
+    <div class="tl-body">Gangwal files counter-claim at LCIA seeking removal of Transfer Restriction Articles (RoFR / tag-along clauses) from AoA, arguing they lock both promoters into a stalemate and prevent free monetization of holdings. <a href="https://finshots.in/archive/why-indigos-co-founder-quietly-flew-away/" target="_blank">Source: Finshots</a></div>
+    <span class="tl-tag gangwal">Counter-LCIA</span>
+  </div>
+
+  <div class="tl-item both">
+    <div class="tl-date">Jan 2020</div>
+    <div class="tl-body">Supreme Court of India (Civil Appeal No. 1544-1545 of 2020) — Vijay Karia &amp; Ors. v. Prysmian Cavi e Sistemi SRL &amp; Ors. clarifies enforcement of foreign-seated arbitration awards. Delhi High Court later uses this framework for the IndiGo LCIA award. <a href="https://jusmundi.com/en/document/decision/en-interglobe-enterprises-private-limited-and-rahul-bhatia-v-1-rakesh-gangwal-2-chinkerpoo-family-trust-3-shobha-gangwal-and-4-interglobe-aviation-limited-order-of-the-delhi-high-court-friday-8th-october-2021" target="_blank">Source: Jus Mundi</a></div>
+    <span class="tl-tag both">Precedent</span>
+  </div>
+
+  <div class="tl-item both">
+    <div class="tl-date">Feb 2021</div>
+    <div class="tl-body">SEBI settlement order: InterGlobe Aviation pays Rs 2.10 Cr &quot;without admitting or denying findings.&quot; Order lists lapses: (i) EY RPT report not shared with board/audit committee, (ii) RPT with InterGlobe Air Transport Ltd (Rs 299.24 Cr) not properly approved, (iii) post-facto audit committee approvals, (iv) prospectus misrepresentation on RoFR expiry. <a href="https://www.livemint.com/companies/news/indigo-sebi-settle-over-gangwal-case-11612916067367.html" target="_blank">Source: Mint</a></div>
+    <span class="tl-tag both">SEBI Settlement</span>
+  </div>
+
+  <div class="tl-item both">
+    <div class="tl-date">Sep 2021</div>
+    <div class="tl-body">LCIA final award (23 Sep 2021): Orders removal of Transfer Restriction Articles from AoA. Both sides must jointly call EGM within 30 days, split costs equally, vote in favour. RoFR and tag-along clauses to be scrapped. Shares become freely tradable. <a href="https://jusmundi.com/en/document/decision/en-interglobe-enterprises-private-limited-and-rahul-bhatia-v-1-rakesh-gangwal-2-chinkerpoo-family-trust-3-shobha-gangwal-and-4-interglobe-aviation-limited-order-of-the-delhi-high-court-friday-8th-october-2021" target="_blank">Source: Jus Mundi / Delhi HC Order</a></div>
+    <span class="tl-tag both">Award</span>
+  </div>
+
+  <div class="tl-item both">
+    <div class="tl-date">Oct 2021</div>
+    <div class="tl-body">Delhi High Court (Justice Sanjeev Narula) passes order under Section 9 of Arbitration Act enforcing LCIA award — directs respondents to cooperate in convening EGM, appoints Local Commissioner to supervise. <a href="https://jusmundi.com/en/document/decision/en-interglobe-enterprises-private-limited-and-rahul-bhatia-v-1-rakesh-gangwal-2-chinkerpoo-family-trust-3-shobha-gangwal-and-4-interglobe-aviation-limited-order-of-the-delhi-high-court-friday-8th-october-2021" target="_blank">Source: Jus Mundi</a></div>
+    <span class="tl-tag both">Enforcement</span>
+  </div>
+
+  <div class="tl-item gangwal">
+    <div class="tl-date">Dec 2021</div>
+    <div class="tl-body">Gangwal resigns from IndiGo board. Announces plan to gradually reduce stake. EGM held; shareholders vote to amend AoA and remove veto clauses. <a href="https://x.com/LarissaFernand/status/1997142795057012874" target="_blank">Source: Twitter / Larissa Fernand</a></div>
+    <span class="tl-tag gangwal">Exit Begins</span>
+  </div>
+
+  <div class="tl-item bhatia">
+    <div class="tl-date">Dec 2025</div>
+    <div class="tl-body">IndiGo operational meltdown: ~4,500 flights cancelled over 10 days due to DGCA crew time-limitation compliance failure. CEO Pieter Elbers resigns (Mar 2026). Rahul Bhatia assumes interim CEO. Civil Aviation Minister warns airline. <a href="https://en.wikipedia.org/wiki/IndiGo" target="_blank">Source: Wikipedia</a></div>
+    <span class="tl-tag bhatia">Crisis</span>
+  </div>
+
+  <div class="tl-item gangwal">
+    <div class="tl-date">May 2025</div>
+    <div class="tl-body">Gangwal sells block worth Rs 6,800 Cr. Stake drops significantly.</div>
+    <span class="tl-tag gangwal">Liquidation</span>
+  </div>
+
+  <div class="tl-item gangwal">
+    <div class="tl-date">Aug 2025</div>
+    <div class="tl-body">Gangwal sells another 3.1% for ~Rs 7,020 Cr. Total holding falls below 5%. Methodical unwinding complete. <a href="https://finshots.in/archive/why-indigos-co-founder-quietly-flew-away/" target="_blank">Source: Finshots</a></div>
+    <span class="tl-tag gangwal">Final Exit</span>
+  </div>
+
+</div>
+
+<!-- PRIMARY SOURCES -->
+<div class="section-head">PRIMARY SOURCE DOCUMENTS <span>// click to expand</span></div>
+
+<div class="collapsible" onclick="this.classList.toggle('open')">
+  <div class="collapsible-header">SEBI SETTLEMENT ORDER (Feb 2021) <span class="arrow">&#9654;</span></div>
+  <div class="collapsible-body"><div class="collapsible-body-inner">
+    <div class="doc-meta">SEBI | Adjudicating Officer: G. Ramar | Date: 9 February 2021</div>
+    <blockquote>&quot;Pending adjudication proceedings, the noticee (InterGlobe Aviation) proposed to settle the instant proceedings initiated against it, without admitting or denying the findings of fact and conclusions of law, through a settlement order.&quot;</blockquote>
+    <p><strong>Key findings listed in order:</strong></p>
+    <p>1. EY report on RPTs commissioned by Chairman M. Damodaran was not shared with the board or audit committee. Only Damodaran saw it; findings communicated to board in March 2019. Gangwal made multiple requests — never shared.</p>
+    <p>2. Related-party transaction with InterGlobe Air Transport Ltd (ticketing vendor) — Rs 299.24 Cr as of 31 Mar 2019. IndiGo claimed this was not an RPT. SEBI disagreed; held audit committee approval was required.</p>
+    <p>3. Lease agreements with Pegasus Buildtech Pvt. Ltd and Caddie Hotels Pvt. Ltd — audit committee nod obtained post-facto in some cases.</p>
+    <p>4. Prospectus (16 Oct 2015) stated RoFR would cease post 10 Nov 2019. Since shareholders did not vote for change, agreement continued. SEBI held this as misrepresentation / violation of disclosure norms.</p>
+    <p>5. EGM sought by Gangwal in May 2019 to enforce governance standards — never convened. Legal opinion communicated &quot;mere six minutes before&quot; scheduled board meeting.</p>
+    <p><em>Settlement amount: Rs 2.10 Crore.</em></p>
+  </div></div>
+</div>
+
+<div class="collapsible" onclick="this.classList.toggle('open')">
+  <div class="collapsible-header">LCIA FINAL AWARD (Sep 2021) <span class="arrow">&#9654;</span></div>
+  <div class="collapsible-body"><div class="collapsible-body-inner">
+    <div class="doc-meta">London Court of International Arbitration | Award Date: 23 September 2021</div>
+    <blockquote>&quot;Claimants [Respondents] and Respondents 1-3 [Petitioners] shall jointly take the following actions to remove the Transfer Restriction Articles from the Company's Articles of Association: (i) make a requisition to call an extraordinary general meeting of shareholders to vote on a resolution to remove the Transfer Restriction Articles... within 30 days after the date of this Award.&quot;</blockquote>
+    <p>The tribunal ordered removal of RoFR and tag-along clauses from the AoA. Both sides required to split costs equally, vote in favour, and convene EGM within statutory timelines.</p>
+    <p>Delhi High Court (Justice Sanjeev Narula, 8 Oct 2021) enforced this under Section 9 of the Arbitration and Conciliation Act, 1996, appointing a Local Commissioner to supervise the EGM.</p>
+  </div></div>
+</div>
+
+<div class="collapsible" onclick="this.classList.toggle('open')">
+  <div class="collapsible-header">BHATIA'S RESPONSE LETTER (Jul 2019) <span class="arrow">&#9654;</span></div>
+  <div class="collapsible-body"><div class="collapsible-body-inner">
+    <div class="doc-meta">IGE Group Statement | Published via BSE Disclosure</div>
+    <p>Key assertions from IGE Group's public response:</p>
+    <p>(i) Gangwal was generously allotted 50% equity 14 years ago and enjoyed full opportunity.</p>
+    <p>(ii) IGE Group took entire economic risk; peak exposure (redeemable preference shares, unsecured loans, personal guarantees) exceeded Rs 1,100 Cr — almost six times contractual obligation of Rs 200 Cr.</p>
+    <p>(iii) Gangwal agreed that IGE Group would have control and make pragmatic risk-based decisions.</p>
+    <p>(iv) Gangwal obliged himself to support IGE Group in controlling the company through voting rights agreement embedded in AoA and SHA — fully aware at signing.</p>
+    <p>(v) Gangwal actively participated in IPO, again agreeing IGE would retain control — disclosed in prospectus.</p>
+    <p>(vi) Stayed silent on RPT issues for 13 years; did not object while signing and approving annual accounts.</p>
+    <p>(vii) Now dismisses controlling rights as &quot;unusual&quot; despite having accepted them for over a decade.</p>
+    <p>(viii) Shied away from taking position on Board of a start-up in a highly regulated sector; now claims to be guardian of corporate governance.</p>
+  </div></div>
+</div>
+
+<div class="collapsible" onclick="this.classList.toggle('open')">
+  <div class="collapsible-header">GANGWAL'S SEBI COMPLAINT (Jul 2019) <span class="arrow">&#9654;</span></div>
+  <div class="collapsible-body"><div class="collapsible-body-inner">
+    <div class="doc-meta">49-Page Document Filed with SEBI | 8 July 2019 Letter</div>
+    <p>Core allegations:</p>
+    <p>1. <strong>RPT Concerns:</strong> Related-party transactions between IndiGo and Bhatia-linked IGE Group entities grew from Rs 31 Cr (FY2010) to ~10x by FY2018. Areas: ticketing, simulation training, crew accommodation, leasing.</p>
+    <p>2. <strong>Governance Failure:</strong> Bhatia's &quot;unusual controlling rights&quot; allowed him to push through decisions without meaningful checks. Board appointments lacked independence.</p>
+    <p>3. <strong>Prospectus Misrepresentation:</strong> RoFR rights described as ceasing post-Nov 2019, but no action taken to remove from AoA.</p>
+    <p>4. <strong>Material Non-Disclosure:</strong> Failure to make timely disclosure of information likely to have significant market reaction.</p>
+    <p>5. <strong>EGM Blocked:</strong> Request for EGM to adopt new RPT protocols — blocked by IGE Group's 38% shareholding (special resolution requiring 75%).</p>
+  </div></div>
+</div>
+
+<!-- THE TRIAD -->
+<div class="section-head">THE TRIAD <span>// three statements that cannot coexist</span></div>
+<div class="triad">
+  <div class="triad-item" data-num="I">
+    <p>&quot;The IGE Group took economic risk almost six times its contractual obligation, and Gangwal knew from day one that control would rest with IGE. He approved every annual account for 13 years.&quot;</p>
+    <div class="source">— IGE Group Response, July 2019</div>
+  </div>
+  <div class="triad-item" data-num="II">
+    <p>&quot;The EY report found procedural irregularities in RPTs. The audit committee's independence was compromised. Post-facto approvals were obtained. This is not about control — it is about whether the board was allowed to see what the Chairman saw.&quot;</p>
+    <div class="source">— Gangwal SEBI Complaint, July 2019</div>
+  </div>
+  <div class="triad-item" data-num="III">
+    <p>&quot;The Noticee, by failing to remove these rights from the articles, had allegedly not complied with the statement made in its prospectus and had thus misrepresented facts before its shareholders.&quot;</p>
+    <div class="source">— SEBI Settlement Order, February 2021</div>
+  </div>
+</div>
+
+<!-- CASUALTIES -->
+<div class="section-head">CASUALTIES <span>// the price of the protocol</span></div>
+<div class="casualties">
+  <div class="cas-card">
+    <div class="cas-number">19%</div>
+    <div class="cas-label">Stock Drop (Jul 2019)</div>
+  </div>
+  <div class="cas-card">
+    <div class="cas-number">Rs 2.10 Cr</div>
+    <div class="cas-label">SEBI Settlement</div>
+  </div>
+  <div class="cas-card">
+    <div class="cas-number">~32%</div>
+    <div class="cas-label">Gangwal Stake Sold</div>
+  </div>
+  <div class="cas-card">
+    <div class="cas-number">~4,500</div>
+    <div class="cas-label">Flights Cancelled (Dec 2025)</div>
+  </div>
+  <div class="cas-card">
+    <div class="cas-number">1</div>
+    <div class="cas-label">CEO Resigned (Elbers, Mar 2026)</div>
+  </div>
+  <div class="cas-card">
+    <div class="cas-number">6+ yrs</div>
+    <div class="cas-label">Feud Duration (Public)</div>
+  </div>
+</div>
+
+<!-- GRAY ZONE -->
+<div class="gray-zone">
+  <h4>The Gray Zone: Nobody Was Wrong</h4>
+  <p><strong>Bhatia was not wrong</strong> to structure the SHA the way he did. The IGE Group took disproportionate economic risk (Rs 1,100+ Cr at peak). Control rights were the price of that risk. Gangwal signed the agreement in 2006, participated in the 2015 IPO where the same structure was disclosed, and approved annual accounts for 13 years. Silence is not fraud. Consent is not coercion.</p>
+  <p><strong>Gangwal was not wrong</strong> to raise governance concerns when RPT values grew 10x and the EY report was withheld from the full board. A shareholder who discovers that audit committee approvals were obtained post-facto, that a ticketing vendor transaction worth Rs 299 Cr was not treated as an RPT, and that the Chairman alone saw a critical review — that shareholder is not a troublemaker. He is a fiduciary.</p>
+  <p><strong>SEBI was not wrong</strong> to list the lapses in its settlement order, even while accepting a no-fault settlement. The regulator's job is to protect market integrity, not to pick sides in a marital dispute between billionaires.</p>
+  <p><strong>The LCIA tribunal was not wrong</strong> to order removal of Transfer Restriction Articles. Both founders had locked each other in a cage of their own design. The tribunal simply unlocked the door.</p>
+  <div class="nobody-wrong">
+    <span>The only wrong was the expectation that two people who built a fortress together would agree on who owns the keys.</span>
+  </div>
+</div>
+
+<!-- MORE TRAPS -->
+<div class="section-head">AMBIGUITY RESERVE <span>// questions that outlive answers</span></div>
+
+<div class="trap-box">
+  <p><strong>Q6.</strong> If the SHA expired in 2019 but the AoA clauses remained, did the founders <span class="confuse">forget</span> to clean up their constitutional documents, or did they <span class="confuse">intentionally leave</span> the locks in place knowing one day they might need them?</p>
+</div>
+
+<div class="trap-box">
+  <p><strong>Q7.</strong> Gangwal sold his entire stake after the LCIA freed him to do so. Bhatia remains as MD and interim CEO. Who <span class="confuse">won</span> — the man who got the governance lapses acknowledged, or the man who kept the airline?</p>
+</div>
+
+<div class="trap-box">
+  <p><strong>Q8.</strong> The Dec 2025 operational crisis (4,500+ cancellations) happened under Bhatia's watch, after Gangwal had fully exited. Is this <span class="confuse">causation</span> (the feud distracted management for 6 years), <span class="confuse">correlation</span> (aviation is hard), or <span class="confuse">convenient narrative</span> (the absent founder cannot be blamed)?</p>
+</div>
+
+<div class="trap-box">
+  <p><strong>Q9.</strong> If both founders voted to remove the RoFR clauses in Dec 2021, and both became free to sell, why did only Gangwal sell? Does Bhatia's retention of his stake prove <span class="confuse">loyalty</span>, or does it prove he never needed the money?</p>
+</div>
+
+<div class="trap-box">
+  <p><strong>Q10.</strong> The SEBI order endorsed Gangwal's allegations but cost IndiGo only Rs 2.10 Cr. The airline is now valued at Rs 2.2 lakh Cr. If the penalty for governance lapses is 0.000095% of market cap, what is the <span class="confuse">real incentive</span> to not have lapses?</p>
+</div>
+
+</div>
+
+<div class="footer">
+  <div class="seal">&#9670;</div>
+  <p>DOSSIER // INDIGO PROTOCOL</p>
+  <p style="margin-top:8px;font-size:10px;color:var(--smoke)">Compiled from SEBI orders, LCIA award, Delhi HC judgment, BSE disclosures, and public statements.<br>No analysis. No verdict. Only the architecture of a fracture.</p>
+</div>
+
+</body>
+</html>

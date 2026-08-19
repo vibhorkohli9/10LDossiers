@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOSSIER // INFOSYS: Sikka–Murthy | The Gray War</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+  :root{
+    --bg:#080808;
+    --panel:#0f0f0f;
+    --elev:#161616;
+    --border:#2a2a2a;
+    --text:#d4d4d4;
+    --dim:#6b6b6b;
+    --sikka:#c9a227;
+    --sikka-glow:rgba(201,162,39,0.12);
+    --murthy:#7eb8da;
+    --murthy-glow:rgba(126,184,218,0.12);
+    --board:#9b9b9b;
+    --blood:#8b3a3a;
+    --amber:#d4a017;
+    --alert:#c0392b;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    line-height:1.65;
+    font-size:15px;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--amber);color:#000}
+
+  .war-room{
+    position:relative;
+    border-bottom:1px solid var(--border);
+    background:linear-gradient(180deg,#0a0a0a 0%,#0f0f0f 100%);
+    overflow:hidden;
+  }
+  .war-room::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.015) 2px,rgba(255,255,255,0.015) 4px);
+    pointer-events:none;
+  }
+  .header-inner{
+    max-width:1100px;
+    margin:0 auto;
+    padding:60px 24px 40px;
+    position:relative;
+    z-index:2;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:var(--alert);
+    border:1px solid var(--alert);
+    display:inline-block;
+    padding:4px 14px;
+    margin-bottom:20px;
+    opacity:0.9;
+  }
+  h1{
+    font-family:'Cinzel',serif;
+    font-size:clamp(28px,5vw,52px);
+    font-weight:700;
+    letter-spacing:-1px;
+    line-height:1.1;
+    color:#e8e8e8;
+    text-shadow:0 0 40px rgba(212,160,23,0.08);
+  }
+  h1 span{
+    color:var(--amber);
+    font-style:italic;
+    font-family:'Playfair Display',serif;
+    font-weight:400;
+  }
+  .sub{
+    margin-top:14px;
+    font-size:16px;
+    color:var(--dim);
+    max-width:600px;
+    font-weight:300;
+  }
+  .no-sides{
+    margin-top:24px;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--dim);
+    letter-spacing:2px;
+    text-transform:uppercase;
+  }
+  .no-sides::before,.no-sides::after{
+    content:"";
+    display:block;
+    width:30px;
+    height:1px;
+    background:var(--dim);
+  }
+
+  .container{
+    max-width:1100px;
+    margin:0 auto;
+    padding:0 24px 80px;
+  }
+
+  .section{margin-top:56px}
+  .section-title{
+    font-family:'Cinzel',serif;
+    font-size:13px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:var(--amber);
+    margin-bottom:24px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  .section-title::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:linear-gradient(90deg,var(--border),transparent);
+  }
+
+  .factions{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:16px;
+  }
+  .faction-card{
+    background:var(--elev);
+    border:1px solid var(--border);
+    padding:22px;
+    position:relative;
+    transition:transform 0.2s,border-color 0.2s;
+  }
+  .faction-card:hover{transform:translateY(-2px)}
+  .faction-card.sikka{border-left:3px solid var(--sikka)}
+  .faction-card.murthy{border-left:3px solid var(--murthy)}
+  .faction-card.board{border-left:3px solid var(--board)}
+  .faction-card.neutral{border-left:3px solid var(--dim)}
+  .faction-name{
+    font-family:'Cinzel',serif;
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:6px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .faction-role{
+    font-size:12.5px;
+    color:var(--dim);
+    line-height:1.6;
+  }
+  .scoreboard-tag{
+    font-family:'JetBrains Mono',monospace;
+    font-size:9px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    padding:2px 8px;
+    border:1px solid var(--border);
+    color:var(--dim);
+    margin-top:12px;
+    display:inline-block;
+  }
+
+  .battlefield{
+    background:var(--elev);
+    border:1px solid var(--border);
+    padding:28px;
+    font-family:'Playfair Display',serif;
+    font-size:18px;
+    color:#a0a0a0;
+    line-height:1.8;
+    position:relative;
+  }
+  .battlefield strong{color:#e0e0e0;font-weight:400}
+  .battlefield em{color:var(--amber);font-style:italic}
+
+  .timeline{position:relative;padding-left:32px}
+  .timeline::before{
+    content:"";
+    position:absolute;
+    left:6px;top:0;bottom:0;
+    width:1px;
+    background:linear-gradient(180deg,var(--amber),var(--border),var(--blood));
+  }
+  .year-mark{
+    position:relative;
+    margin:48px 0 28px;
+    font-family:'Cinzel',serif;
+    font-size:32px;
+    font-weight:700;
+    color:var(--amber);
+    text-shadow:0 0 30px rgba(212,160,23,0.1);
+  }
+  .year-mark::before{
+    content:"";
+    position:absolute;
+    left:-32px;top:50%;transform:translateY(-50%);
+    width:13px;height:13px;
+    background:var(--bg);
+    border:2px solid var(--amber);
+    border-radius:50%;
+    box-shadow:0 0 0 4px var(--bg),0 0 15px var(--amber);
+  }
+  .event{
+    position:relative;
+    background:var(--panel);
+    border:1px solid var(--border);
+    margin-bottom:20px;
+    overflow:hidden;
+  }
+  .event::before{
+    content:"";
+    position:absolute;
+    left:-26px;top:28px;
+    width:9px;height:9px;
+    background:var(--dim);
+    border-radius:50%;
+    border:2px solid var(--bg);
+  }
+  .event.major::before{background:var(--alert);box-shadow:0 0 8px var(--alert)}
+  .event.sikka-side::before{background:var(--sikka)}
+  .event.murthy-side::before{background:var(--murthy)}
+  .event-header{
+    padding:18px 22px 14px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .event-date{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    color:var(--amber);
+    letter-spacing:1px;
+  }
+  .event-faction{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    padding:3px 10px;
+    border:1px solid var(--border);
+    color:var(--dim);
+  }
+  .event-body{padding:18px 22px 22px}
+  .event-body p{margin-bottom:12px;color:#b8b8b8}
+  .event-body p:last-child{margin-bottom:0}
+  .event-body strong{color:#e8e8e8;font-weight:600}
+
+  .transmission{
+    border-left:2px solid var(--amber);
+    padding:14px 18px;
+    margin:14px 0;
+    background:rgba(212,160,23,0.04);
+    font-family:'Playfair Display',serif;
+    font-size:15.5px;
+    color:#9e9e9e;
+    line-height:1.7;
+    position:relative;
+  }
+  .transmission::before{
+    content:">>>";
+    position:absolute;
+    top:8px;right:12px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:9px;
+    color:var(--amber);
+    opacity:0.5;
+    letter-spacing:2px;
+  }
+  .transmission.murthy-line{border-left-color:var(--murthy);background:rgba(126,184,218,0.04)}
+  .transmission.murthy-line::before{color:var(--murthy)}
+  .transmission.board-line{border-left-color:var(--board);background:rgba(155,155,155,0.04)}
+  .transmission.board-line::before{color:var(--board)}
+  .transmission.alert-line{border-left-color:var(--alert);background:rgba(192,57,43,0.04)}
+  .transmission.alert-line::before{color:var(--alert);content:"!!!"}
+
+  .source-bar{
+    padding:12px 22px;
+    background:var(--elev);
+    border-top:1px solid var(--border);
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .source-link{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--murthy);
+    text-decoration:none;
+    border:1px solid rgba(126,184,218,0.25);
+    padding:4px 12px;
+    transition:all 0.2s;
+    white-space:nowrap;
+  }
+  .source-link:hover{
+    background:rgba(126,184,218,0.1);
+    border-color:var(--murthy);
+    text-decoration:underline;
+  }
+
+  .gray-zone{
+    background:var(--elev);
+    border:1px solid var(--border);
+    padding:0;
+  }
+  .gray-header{
+    padding:20px 24px;
+    border-bottom:1px solid var(--border);
+    font-family:'Cinzel',serif;
+    font-size:14px;
+    letter-spacing:2px;
+    color:var(--amber);
+    text-transform:uppercase;
+  }
+  .gray-entry{
+    padding:22px 24px;
+    border-bottom:1px solid var(--border);
+  }
+  .gray-entry:last-child{border-bottom:none}
+  .gray-who{
+    font-family:'Cinzel',serif;
+    font-size:15px;
+    font-weight:700;
+    margin-bottom:8px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .gray-who.sikka-c{color:var(--sikka)}
+  .gray-who.murthy-c{color:var(--murthy)}
+  .gray-who.board-c{color:var(--board)}
+  .gray-who.neutral-c{color:var(--dim)}
+  .gray-who.blood-c{color:var(--blood)}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .gray-text{color:#a0a0a0;font-size:14.5px;line-height:1.8}
+  .gray-text strong{color:#d0d0d0;font-weight:500}
+
+  .field-question{
+    background:rgba(212,160,23,0.05);
+    border:1px dashed rgba(212,160,23,0.25);
+    padding:16px 20px;
+    margin:16px 0 0;
+    font-family:'Playfair Display',serif;
+    font-size:15px;
+    color:#b0a070;
+    line-height:1.7;
+    position:relative;
+  }
+  .field-question::before{
+    content:"?";
+    position:absolute;
+    top:-12px;left:16px;
+    background:var(--bg);
+    color:var(--amber);
+    font-family:'Cinzel',serif;
+    font-size:18px;
+    font-weight:700;
+    padding:0 8px;
+    line-height:1;
+  }
+  .field-question.murthy-q{background:rgba(126,184,218,0.05);border-color:rgba(126,184,218,0.25);color:#7da8b8}
+  .field-question.murthy-q::before{color:var(--murthy)}
+  .field-question.board-q{background:rgba(155,155,155,0.05);border-color:rgba(155,155,155,0.25);color:#9a9a9a}
+  .field-question.board-q::before{color:var(--board)}
+  .field-question.bansal-q{background:rgba(139,58,58,0.05);border-color:rgba(139,58,58,0.25);color:#a07070}
+  .field-question.bansal-q::before{color:var(--blood)}
+
+  .intel-file{
+    background:var(--panel);
+    border:1px solid var(--border);
+    margin-bottom:14px;
+  }
+  .intel-header{
+    padding:16px 22px;
+    cursor:pointer;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:var(--dim);
+    transition:background 0.2s;
+  }
+  .intel-header:hover{background:var(--elev)}
+  .intel-header span:first-child{display:flex;align-items:center;gap:10px}
+  .file-icon{font-size:14px}
+  .intel-content{
+    padding:0 22px 22px;
+    display:none;
+  }
+  .intel-file.open .intel-content{display:block}
+  .chevron{transition:transform 0.25s}
+  .intel-file.open .chevron{transform:rotate(180deg)}
+
+  .casualty-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:14px;
+  }
+  .casualty{
+    background:var(--panel);
+    border:1px solid var(--border);
+    padding:22px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .casualty::before{
+    content:"";
+    position:absolute;
+    top:0;left:0;right:0;
+    height:2px;
+    background:linear-gradient(90deg,var(--amber),var(--blood));
+    opacity:0.4;
+  }
+  .casualty-num{
+    font-family:'Cinzel',serif;
+    font-size:26px;
+    font-weight:700;
+    color:var(--amber);
+    margin-bottom:6px;
+    letter-spacing:-0.5px;
+  }
+  .casualty-label{
+    font-size:12px;
+    color:var(--dim);
+    line-height:1.5;
+  }
+
+  .triad{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:16px;
+    margin-top:20px;
+  }
+  .triad-card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    padding:22px;
+    position:relative;
+  }
+  .triad-card.s1{border-top:3px solid var(--murthy)}
+  .triad-card.s2{border-top:3px solid var(--sikka)}
+  .triad-card.s3{border-top:3px solid var(--board)}
+  .triad-quote{
+    font-family:'Playfair Display',serif;
+    font-size:15px;
+    color:#9a9a9a;
+    line-height:1.7;
+    margin-bottom:14px;
+    font-style:italic;
+  }
+  .triad-who{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--dim);
+  }
+
+  .footer{
+    margin-top:80px;
+    padding:40px 0;
+    border-top:1px solid var(--border);
+    text-align:center;
+    color:var(--dim);
+    font-size:12px;
+    font-family:'JetBrains Mono',monospace;
+    letter-spacing:1px;
+  }
+
+  @media(max-width:700px){
+    .header-inner{padding:40px 20px 30px}
+    .timeline{padding-left:22px}
+    .timeline::before{left:4px}
+    .year-mark::before{left:-22px;width:10px;height:10px}
+    .event::before{left:-18px;width:7px;height:7px}
+    .event-header{flex-direction:column;gap:8px}
+    .triad{grid-template-columns:1fr}
+  }
+</style>
+<base target="_blank">
+</head>
+<body>
+
+<div class="war-room">
+  <div class="header-inner">
+    <div class="eyebrow">Classified Corporate Dossier // No Sides Taken</div>
+    <h1>INFOSYS:<br><span>The Sikka–Murthy</span> Gray War</h1>
+    <p class="sub">A chronicle of private scoreboards, invisible battle lines, and the moment when keeping the game moving forward became impossible.</p>
+    <div class="no-sides">No Heroes &nbsp;&bull;&nbsp; No Villains &nbsp;&bull;&nbsp; Only Moves</div>
+  </div>
+</div>
+
+<div class="container">
+
+<div class="section">
+  <div class="section-title">The Battlefield</div>
+  <div class="battlefield">
+    <strong>Seven factions.</strong> One company. No shared scoreboard.<br><br>
+    What follows is not a story of right and wrong. It is a <em>geopolitical map</em> of a corporate entity at war with itself &mdash; where the CEO, the founder, the board, the CFO, the legal counsel, the whistleblower, and the shareholders each operated on intelligence the others could not see. <br><br>
+    <strong>Read it like a field report.</strong> Every quote is an intercepted transmission. Every number is a casualty. Every question is a trap.
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">The Factions & Their Private Scoreboards</div>
+  <div class="factions">
+    <div class="faction-card sikka">
+      <div class="faction-name">Vishal Sikka <span style="font-family:'JetBrains Mono';font-size:10px;color:var(--dim)">CEO</span></div>
+      <div class="faction-role">First non-founder CEO & MD (Aug 2014 &ndash; Aug 2017). Former SAP Executive Board. PhD, Stanford.</div>
+      <div class="scoreboard-tag">Scoring On: Technological relevance, transformation, market cap</div>
+    </div>
+    <div class="faction-card murthy">
+      <div class="faction-name">Narayana Murthy <span style="font-family:'JetBrains Mono';font-size:10px;color:var(--dim)">FOUNDER</span></div>
+      <div class="faction-role">Co-founder (1981). CEO 1981&ndash;2002. Executive Chairman 2013&ndash;2014. Chairman Emeritus from Oct 2014.</div>
+      <div class="scoreboard-tag">Scoring On: Founder values, transparency, institutional identity</div>
+    </div>
+    <div class="faction-card board">
+      <div class="faction-name">The Board <span style="font-family:'JetBrains Mono';font-size:10px;color:var(--dim)">FIDUCIARY</span></div>
+      <div class="faction-role">Seshasayee (Chair), Venkatesan, Lehman, Etchemendy, Mazumdar-Shaw, Kudva, Sinha, Prahlad, Sundaram.</div>
+      <div class="scoreboard-tag">Scoring On: Legal protection, fiduciary duty, reputation management</div>
+    </div>
+    <div class="faction-card neutral">
+      <div class="faction-name">Rajiv Bansal <span style="font-family:'JetBrains Mono';font-size:10px;color:var(--dim)">CFO</span></div>
+      <div class="faction-role">CFO until Oct 2015. Later joined Ola. Received &#8377;17.38 crore severance.</div>
+      <div class="scoreboard-tag">Scoring On: Contractual entitlement, career continuity</div>
+    </div>
+    <div class="faction-card neutral">
+      <div class="faction-name">David Kennedy <span style="font-family:'JetBrains Mono';font-size:10px;color:var(--dim)">LEGAL</span></div>
+      <div class="faction-role">General Legal Counsel until Dec 2016. Received special $1M severance.</div>
+      <div class="scoreboard-tag">Scoring On: Exit terms, legal privilege</div>
+    </div>
+    <div class="faction-card neutral">
+      <div class="faction-name">The Whistleblower <span style="font-family:'JetBrains Mono';font-size:10px;color:var(--dim)">UNKNOWN</span></div>
+      <div class="faction-role">Anonymous letters to SEBI and US SEC alleging Panaya wrongdoing.</div>
+      <div class="scoreboard-tag">Scoring On: Accountability, institutional integrity</div>
+    </div>
+    <div class="faction-card sikka">
+      <div class="faction-name">Ritika Suri <span style="font-family:'JetBrains Mono';font-size:10px;color:var(--dim)">DEALS</span></div>
+      <div class="faction-role">EVP, large deals. Led Panaya acquisition. Resigned July 2017.</div>
+      <div class="scoreboard-tag">Scoring On: Deal execution, strategic expansion</div>
+    </div>
+    <div class="faction-card murthy">
+      <div class="faction-name">Founders' Camp <span style="font-family:'JetBrains Mono';font-size:10px;color:var(--dim)">PROMOTERS</span></div>
+      <div class="faction-role">Murthy, Nilekani, Gopalakrishnan, Shibulal, Dinesh. Combined stake ~12.75%.</div>
+      <div class="scoreboard-tag">Scoring On: Legacy preservation, cultural DNA</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">The War Log</div>
+  <div class="timeline">
+
+    <div class="year-mark">2014</div>
+
+    <div class="event sikka-side">
+      <div class="event-header">
+        <div class="event-date">JUNE 12, 2014</div>
+        <div class="event-faction">Sikka Camp</div>
+      </div>
+      <div class="event-body">
+        <p>Infosys announces appointment of <strong>Vishal Sikka</strong> as first non-founder CEO & MD. Murthy, then Executive Chairman, says: <em>&quot;Vishal brings valuable experience as a leader of a large, global corporation. His illustrious track record and value system make him an ideal choice to lead Infosys.&quot;</em></p>
+        <p>Between 2013 and 2014, Infosys had seen at least <strong>13 top-level exits</strong>.</p>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz: Master Timeline</a>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-header">
+        <div class="event-date">AUGUST 2014</div>
+        <div class="event-faction">Transition</div>
+      </div>
+      <div class="event-body">
+        <p>Sikka takes charge. The company is bleeding talent and relevance.</p>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz</a>
+      </div>
+    </div>
+
+    <div class="event murthy-side">
+      <div class="event-header">
+        <div class="event-date">OCTOBER 2014</div>
+        <div class="event-faction">Murthy Camp</div>
+      </div>
+      <div class="event-body">
+        <p>Murthy steps down as non-executive chairman. Becomes <strong>Chairman Emeritus</strong>. The battlefield is now set: the founder steps back, but the founder's shadow remains.</p>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://en.wikipedia.org/wiki/Infosys" target="_blank">&rarr; Wikipedia: Infosys History</a>
+      </div>
+    </div>
+
+    <div class="year-mark">2015</div>
+
+    <div class="event sikka-side">
+      <div class="event-header">
+        <div class="event-date">FEBRUARY 2015</div>
+        <div class="event-faction">Sikka Camp</div>
+      </div>
+      <div class="event-body">
+        <p>Infosys acquires <strong>Panaya Inc.</strong> &mdash; Israeli automation technology firm &mdash; for <strong>$200 million</strong>.</p>
+        <div class="transmission">&quot;The acquisition&hellip;will help amplify the potential of our people, freeing us from the drudgery of many repetitive tasks.&quot; &mdash; Vishal Sikka</div>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz</a>
+        <a class="source-link" href="https://www.managementstudyguide.com/panaya-acquisition.htm" target="_blank">&rarr; Mgmt Study Guide</a>
+      </div>
+    </div>
+
+    <div class="event sikka-side">
+      <div class="event-header">
+        <div class="event-date">APRIL 2015</div>
+        <div class="event-faction">Sikka Camp</div>
+      </div>
+      <div class="event-body">
+        <p>Infosys acquires <strong>Skava</strong> (digital experience solutions) for <strong>$120 million</strong>. Sikka announces <strong>&quot;Vision 2020&quot;</strong> &mdash; target of $20 billion revenue by 2020.</p>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz</a>
+      </div>
+    </div>
+
+    <div class="event board">
+      <div class="event-header">
+        <div class="event-date">JUNE 2015</div>
+        <div class="event-faction">The Board</div>
+      </div>
+      <div class="event-body">
+        <p><strong>R. Seshasayee</strong> appointed new non-executive chairman. A new referee enters the ring.</p>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz</a>
+      </div>
+    </div>
+
+    <div class="event major">
+      <div class="event-header">
+        <div class="event-date">OCTOBER 2015</div>
+        <div class="event-faction">First Blood</div>
+      </div>
+      <div class="event-body">
+        <p><strong>Rajiv Bansal resigns as CFO.</strong> Infosys signs a severance agreement to pay him <strong>&#8377;17.38 crore</strong> &mdash; equivalent to <strong>24 months' pay</strong> &mdash; in tranches. First tranche of &#8377;5.2 crore paid immediately.</p>
+        <p>This was <strong>unprecedented in Infosys history</strong>. The norm was 3 months. The board later admitted the payment was excessive and that <em>&quot;an element of subjectivity had influenced the quantum.&quot;</em></p>
+        <div class="field-question bansal-q">If you are Rajiv Bansal, what is your private scoreboard when you sign that severance agreement &mdash; and what do you think the board believes your scoreboard is?</div>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1393795/infosys-has-to-pay-rs12-crore-severance-to-ex-cfo-rajiv-bansal" target="_blank">&rarr; Quartz: Arbitration</a>
+        <a class="source-link" href="https://timesofindia.indiatimes.com/business/india-business/infosys-loses-arbitration-to-pay-former-cfo-more-than-rs-12-crore/articleshow/65853634.cms" target="_blank">&rarr; Times of India</a>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-header">
+        <div class="event-date">DECEMBER 2015</div>
+        <div class="event-faction">Shadow Move</div>
+      </div>
+      <div class="event-body">
+        <p><strong>David Kennedy</strong>, General Legal Counsel, resigns. Receives a special <strong>12-month severance</strong> of nearly <strong>$1 million</strong>, despite having an existing employment contract.</p>
+        <div class="field-question board-q">If you are on the compensation committee, why does the legal counsel who just resigned get a special severance that no one else gets &mdash; and who else in the room knows about it?</div>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz</a>
+      </div>
+    </div>
+
+    <div class="year-mark">2016</div>
+
+    <div class="event major sikka-side">
+      <div class="event-header">
+        <div class="event-date">FEBRUARY 2016</div>
+        <div class="event-faction">Sikka Camp</div>
+      </div>
+      <div class="event-body">
+        <p>The Infosys board raises Sikka's compensation by <strong>55% to $11 million per year</strong> (from $7.08 million). Breakdown: $1M base, $3M variable, $2M RSUs, $5M stock options.</p>
+        <p>The shareholder vote: Only <strong>23.57% of promoter (founder) votes</strong> are cast in favor. <strong>The founders vote against their own CEO's compensation.</strong></p>
+        <div class="transmission">&quot;I am not disappointed. I don't care. I have 100% backing of the board and support from the shareholders&hellip; I still respect the founders. Why they did this, you should ask them.&quot; &mdash; Vishal Sikka</div>
+        <div class="field-question murthy-q">If you are Narayana Murthy, what do you see when you look at a $11M pay package for a CEO while your engineers get 80% variable pay &mdash; and why can't the board see it?</div>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://chambers.com/articles/executive-compensation-in-india-summing-up-the-infosys-controversy" target="_blank">&rarr; Chambers: Compensation Analysis</a>
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz</a>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-header">
+        <div class="event-date">MAY 2016</div>
+        <div class="event-faction">Analysts</div>
+      </div>
+      <div class="event-body">
+        <p>Proxy advisory firms and analysts question the <strong>&#8377;23.02 crore</strong> in severance and benefits paid to Bansal and Kennedy combined.</p>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz</a>
+      </div>
+    </div>
+
+    <div class="event murthy-side">
+      <div class="event-header">
+        <div class="event-date">SEPTEMBER 2016</div>
+        <div class="event-faction">Murthy Camp</div>
+      </div>
+      <div class="event-body">
+        <p>Infosys <strong>stops paying the balance &#8377;12.17 crore</strong> to Bansal after <strong>founders express displeasure</strong>. The board reverses its own decision under founder pressure.</p>
+        <div class="field-question board-q">If you are the board chairman, what is the cost of stopping a legally signed payment because the founder is angry &mdash; and what is the cost of continuing it?</div>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz</a>
+      </div>
+    </div>
+
+    <div class="event sikka-side">
+      <div class="event-header">
+        <div class="event-date">NOVEMBER 2016</div>
+        <div class="event-faction">Sikka Camp</div>
+      </div>
+      <div class="event-body">
+        <p>Sikka tells a newspaper: <em>&quot;My health has suffered for sure. It is a very complex transformation we are doing, far more complex than people understand.&quot;</em></p>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz</a>
+      </div>
+    </div>
+
+    <div class="event murthy-side">
+      <div class="event-header">
+        <div class="event-date">DECEMBER 2016</div>
+        <div class="event-faction">Murthy Camp</div>
+      </div>
+      <div class="event-body">
+        <p><strong>The Founders' Meeting.</strong> Murthy, S.D. Shibulal, and Kris Gopalakrishnan meet Seshasayee and Sikka. They express <strong>unhappiness with Seshasayee</strong>, citing corporate governance issues.</p>
+        <div class="field-question murthy-q">If you are Murthy, what do you say in that room that you cannot say in public &mdash; and what do you hold back because Sikka is still the CEO?</div>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz</a>
+      </div>
+    </div>
+
+    <div class="year-mark">2017</div>
+
+    <div class="event major murthy-side">
+      <div class="event-header">
+        <div class="event-date">FEBRUARY 2017</div>
+        <div class="event-faction">Murthy Camp</div>
+      </div>
+      <div class="event-body">
+        <p>Murthy gives a <strong>scathing interview to Economic Times</strong>:</p>
+        <div class="transmission murthy-line">&quot;We have seen a concerning drop in governance standards at Infosys. Let me illustrate this with just one example. Providing huge severance pay (with 100% variable) to some departing employees while giving only 80% variable for employees in the company is one such example. Such payments raise doubts whether the company is using such payments as hush money to hide something.&quot;</div>
+        <p>Same month: <strong>Anonymous whistleblower letters</strong> sent to SEBI and US SEC alleging wrongdoing in the Panaya acquisition. Claims include: Panaya was overvalued; relatives of top Infosys officials had invested in Panaya indirectly through VC funds; former CFO Rajiv Bansal was not in favor of the deal; the acquisition may have benefited insiders.</p>
+        <div class="field-question murthy-q">If you are the whistleblower, what is the one piece of intelligence you have that makes you certain the board's investigation will never find what you found?</div>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz</a>
+        <a class="source-link" href="https://www.managementstudyguide.com/panaya-acquisition.htm" target="_blank">&rarr; Mgmt Study Guide</a>
+      </div>
+    </div>
+
+    <div class="event sikka-side">
+      <div class="event-header">
+        <div class="event-date">FEBRUARY 2017</div>
+        <div class="event-faction">Sikka Camp</div>
+      </div>
+      <div class="event-body">
+        <p>Sikka calls the governance talk <em>&quot;distracting&quot;</em> and says he has <em>&quot;good relations with the founders, including Murthy.&quot;</em> He says he meets Murthy five or six times a year.</p>
+        <div class="field-question sikka-q">If you are Sikka, what do you tell yourself after that meeting with Murthy &mdash; and what do you not tell your board?</div>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz</a>
+      </div>
+    </div>
+
+    <div class="event board">
+      <div class="event-header">
+        <div class="event-date">FEBRUARY 2017</div>
+        <div class="event-faction">The Board</div>
+      </div>
+      <div class="event-body">
+        <p>Infosys board brushes aside concerns. Says decisions were made <em>&quot;bona fide, in the overall interests of the company.&quot;</em></p>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz</a>
+      </div>
+    </div>
+
+    <div class="event sikka-side">
+      <div class="event-header">
+        <div class="event-date">JUNE 2017</div>
+        <div class="event-faction">Sikka Camp</div>
+      </div>
+      <div class="event-body">
+        <p>Infosys <strong>scraps Sikka's $20 billion revenue target by 2020.</strong> Reports emerge that founders were planning to sell their stakes. Infosys denies.</p>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz</a>
+      </div>
+    </div>
+
+    <div class="event board">
+      <div class="event-header">
+        <div class="event-date">JUNE 2017</div>
+        <div class="event-faction">The Board</div>
+      </div>
+      <div class="event-body">
+        <p>Two independent firms &mdash; <strong>Gibson Dunn & Crutcher</strong> (US law firm) and others &mdash; clear Infosys of all charges of financial impropriety in Panaya and Skava deals.</p>
+        <div class="transmission board-line">&quot;We found no evidence whatsoever to support any of the new allegations in the complaints regarding wrongdoing by the company or its directors and employees.&quot; &mdash; Gibson Dunn</div>
+        <div class="field-question board-q">If you are the board, why does a clean chit from three law firms not end the war &mdash; and what does it cost you that Murthy does not believe it?</div>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz</a>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-header">
+        <div class="event-date">JUNE 23, 2017</div>
+        <div class="event-faction">Public Relations</div>
+      </div>
+      <div class="event-body">
+        <p>Infosys board publishes a <strong>&quot;Summary Finding Statement&quot;</strong> on its website, exonerating management. Murthy is not satisfied. He wants the <strong>full reports</strong> made public.</p>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz</a>
+      </div>
+    </div>
+
+    <div class="event sikka-side">
+      <div class="event-header">
+        <div class="event-date">JULY 2017</div>
+        <div class="event-faction">Sikka Camp</div>
+      </div>
+      <div class="event-body">
+        <p><strong>Ritika Suri resigns.</strong> She was in charge of large deals and led the Panaya acquisition. She had been cleared by internal audit.</p>
+        <div class="field-question sikka-q">If you are Ritika Suri, you have been cleared by audit. Why do you still resign &mdash; and what does your resignation signal to the market that words cannot?</div>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz</a>
+      </div>
+    </div>
+
+    <div class="event major murthy-side">
+      <div class="event-header">
+        <div class="event-date">JULY 8, 2017</div>
+        <div class="event-faction">Murthy Camp</div>
+      </div>
+      <div class="event-body">
+        <p>Murthy sends a <strong>detailed letter to the Infosys board</strong> demanding answers to whistleblower allegations. He asks <strong>12 specific questions</strong> about:</p>
+        <ul style="margin:12px 0 12px 20px;color:#a0a0a0;font-size:14px;line-height:2">
+          <li>Rajiv Bansal's objections to Panaya</li>
+          <li>Whether any employee/relative benefited from Panaya</li>
+          <li>The existence of an email from David Kennedy to Sikka about hiding the Bansal agreement</li>
+          <li>Why the board approved unusual severance payments</li>
+          <li>Whether investigation scope was defined to protect the board</li>
+        </ul>
+        <div class="field-question murthy-q">If you are Murthy writing these 12 questions at 2 AM, which question is the one you know will never be answered &mdash; and why do you ask it anyway?</div>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://www.forbesindia.com/article/special/narayana-murthy-makes-public-letters-to-advisors-and-infosys-board/47917/1" target="_blank">&rarr; Forbes India: Full Letters</a>
+        <a class="source-link" href="https://www.thehindu.com/incoming/full-text-of-narayana-murthys-aug-14-letter-slamming-infosys-board/article62044213.ece" target="_blank">&rarr; The Hindu</a>
+      </div>
+    </div>
+
+    <div class="event board">
+      <div class="event-header">
+        <div class="event-date">AUGUST 2017</div>
+        <div class="event-faction">The Board</div>
+      </div>
+      <div class="event-body">
+        <p>Infosys <strong>declines Murthy's request</strong> to make the Gibson Dunn report public. The board says releasing more details would <em>&quot;inhibit the company's ability to conduct effective investigations into any matter in the future.&quot;</em></p>
+        <div class="field-question board-q">If you are the board, what is the one document you cannot release because it would prove Murthy right &mdash; or because it would prove him wrong in a way that destroys the company?</div>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://www.thehindu.com/business/Industry/infosys-decides-to-sell-israeli-firm-panaya/article23528179.ece" target="_blank">&rarr; The Hindu: Board Statement</a>
+      </div>
+    </div>
+
+    <div class="event major sikka-side">
+      <div class="event-header">
+        <div class="event-date">AUGUST 18, 2017</div>
+        <div class="event-faction">Sikka Camp &mdash; The Resignation</div>
+      </div>
+      <div class="event-body">
+        <p><strong>Vishal Sikka resigns as MD & CEO of Infosys.</strong></p>
+        <div class="transmission">&quot;Over the last many months and quarters, we have all been besieged by false, baseless, malicious, and increasingly personal attacks. Allegations that have been repeatedly proven false and baseless by multiple, independent investigations. But despite this, the attacks continue, and worse still, amplified by the very people from whom we all expected the most steadfast support in this great transformation.&quot;</div>
+        <div class="transmission">&quot;It is clear to me that despite our successes over the last three years, and the powerful seeds of innovation that we have sown, I cannot carry out my job as CEO and continue to create value, while also constantly defending against unrelenting, baseless/malicious and increasingly personal attacks.&quot;</div>
+        <div class="field-question sikka-q">If you are Sikka at 3 AM on August 18, what is the one sentence you write in the resignation letter that you know Murthy will misread &mdash; and what is the sentence you delete before sending?</div>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://timesofindia.indiatimes.com/business/india-business/full-text-vishal-sikkas-resignation-letter/articleshow/60113867.cms" target="_blank">&rarr; Times of India: Full Letter</a>
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz</a>
+      </div>
+    </div>
+
+    <div class="event major board">
+      <div class="event-header">
+        <div class="event-date">AUGUST 18, 2017</div>
+        <div class="event-faction">The Board &mdash; Counter-Attack</div>
+      </div>
+      <div class="event-body">
+        <p>The <strong>Infosys board issues a scathing statement</strong> blaming Murthy directly:</p>
+        <div class="transmission board-line">&quot;Mr. Murthy's campaign against the board and the company has had the unfortunate effect to undermine the company's efforts to transform itself. The board has been engaged in a dialogue with the founder to resolve his concerns over the course of a year, trying earnestly to find feasible solutions within the boundaries of law and without compromising its independence. These dialogues have unfortunately not been successful.&quot;</div>
+        <div class="transmission alert-line">&quot;Murthy's continuous assault is the primary reason that Vishal Sikka has resigned despite strong board support.&quot;</div>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz: Board Statement</a>
+        <a class="source-link" href="https://www.forbesindia.com/article/special/narayana-murthy-makes-public-letters-to-advisors-and-infosys-board/47917/1" target="_blank">&rarr; Forbes India</a>
+      </div>
+    </div>
+
+    <div class="event major murthy-side">
+      <div class="event-header">
+        <div class="event-date">AUGUST 18, 2017</div>
+        <div class="event-faction">Murthy Camp &mdash; Return Fire</div>
+      </div>
+      <div class="event-body">
+        <p><strong>Murthy hits back</strong> with a public statement:</p>
+        <div class="transmission murthy-line">&quot;I am extremely anguished by the allegations, tone and tenor of statements. I voluntarily left the Board in 2014 and am not seeking any money, position for children or power. My concern primarily was the deteriorating standard of corporate governance which I have repeatedly brought to the notice of the Infosys board.&quot;</div>
+        <div class="transmission murthy-line">&quot;It is below my dignity to respond to such baseless insinuations. However, several shareholders who have read the whistle-blower report have told me that it is hard to believe a report produced by a set of lawyers hired by a set of accused, giving a clean chit to the accused, and the accused refusing to disclose why they got a clean chit! They say that this is not the way an impartial and objective investigation should be held.&quot;</div>
+        <div class="field-question murthy-q">If you are Murthy, and the board just called your campaign &quot;the primary reason&quot; for Sikka's resignation, what is your next necessary move &mdash; and what does it cost your relationship with Nilekani?</div>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://www.thenewsminute.com/news/narayana-murthy-hits-back-infosys-says-below-my-dignity-respond-baseless-insinuations-66995" target="_blank">&rarr; The News Minute: Full Response</a>
+      </div>
+    </div>
+
+    <div class="event major murthy-side">
+      <div class="event-header">
+        <div class="event-date">AUGUST 14, 2017</div>
+        <div class="event-faction">Murthy Camp &mdash; The Manifesto</div>
+      </div>
+      <div class="event-body">
+        <p>Murthy releases a <strong>1,600+ word letter to &quot;Advisors&quot;</strong> and his July 8 letter to the board. Key excerpts:</p>
+        <div class="transmission murthy-line">&quot;What do some well-meaning shareholders and I want from the Infosys board? Not money, not position for our children and not power. We just do not want the board to drive this institution to death through serious governance deficits in our own life time.&quot;</div>
+        <div class="transmission murthy-line">&quot;The best way to ensure longevity of any corporation is by pursing good governance. Businesses will go through ups and downs and that is par for the course; but bad governance is not.&quot;</div>
+        <div class="transmission murthy-line">&quot;I have not commented on Dr. Vishal Sikka's work as is made out by the media. I have not commented about his strategy or its execution since I have not seen him operate from the vantage point of an Infosys board member. I simply do not believe in commenting on anybody without data and facts. My problem is with governance at Infosys. I believe that the fault lies with the current board.&quot;</div>
+        <div class="transmission murthy-line">&quot;Somehow, public has been made to think by some vested interests that this is a fight between Vishal and us, the founders and the early adopters. That is simply not true.&quot;</div>
+        <div class="transmission alert-line">&quot;The general belief among a large number of shareholders is that the current attitude of the board is a clear example of the worst board governance in India's corporate history.&quot;</div>
+        <p style="margin-top:14px;color:#a0a0a0;font-size:14px"><strong>Murthy's 12 questions to the board</strong> (from July 8, 2017 letter):</p>
+        <ol style="margin:10px 0 0 20px;color:#a0a0a0;font-size:13.5px;line-height:2.2">
+          <li>What were Rajiv Bansal's objections to the Panaya acquisition?</li>
+          <li>Can the company deny that any employee/relative benefited from Panaya?</li>
+          <li>Can the company certify Panaya was not overvalued?</li>
+          <li>Was there an email from David Kennedy to Sikka saying he could no longer hide the Bansal agreement?</li>
+          <li>Did KPMG auditors unearth this email?</li>
+          <li>Did the board know about the Bansal agreement in October 2015 or only in January 2016?</li>
+          <li>Did Seshasayee lie at the 2016 AGM about Bansal having &quot;special secret competitive data&quot;?</li>
+          <li>Why was David Kennedy given a special severance after hiding information from the board?</li>
+          <li>Why was Kennedy not dismissed in January 2016 when the hiding was discovered, but allowed to resign in December 2016?</li>
+          <li>Did the investigation scope protect the board?</li>
+          <li>Were CAM, LW, and KPMG complicit?</li>
+          <li>Has the culture changed to reward people who hide information from the board?</li>
+        </ol>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://www.forbesindia.com/article/special/narayana-murthy-makes-public-letters-to-advisors-and-infosys-board/47917/1" target="_blank">&rarr; Forbes India: Full Letters</a>
+        <a class="source-link" href="https://www.thehindu.com/incoming/full-text-of-narayana-murthys-aug-14-letter-slamming-infosys-board/article62044213.ece" target="_blank">&rarr; The Hindu: Full Text</a>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-header">
+        <div class="event-date">AUGUST 2017</div>
+        <div class="event-faction">Interim</div>
+      </div>
+      <div class="event-body">
+        <p><strong>U.B. Pravin Rao appointed Interim CEO & MD.</strong></p>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://en.wikipedia.org/wiki/Infosys" target="_blank">&rarr; Wikipedia</a>
+      </div>
+    </div>
+
+    <div class="event murthy-side">
+      <div class="event-header">
+        <div class="event-date">AUGUST 24, 2017</div>
+        <div class="event-faction">Murthy Camp &mdash; The Restoration</div>
+      </div>
+      <div class="event-body">
+        <p><strong>Nandan Nilekani returns</strong> as non-executive Chairman. Murthy's ally and co-founder. The board that blamed Murthy is effectively dissolved.</p>
+        <div class="field-question board-q">If you are a board member who signed the August 18 statement blaming Murthy, what do you say when Nilekani calls you the next morning?</div>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://en.wikipedia.org/wiki/Infosys" target="_blank">&rarr; Wikipedia</a>
+      </div>
+    </div>
+
+    <div class="year-mark">2018</div>
+
+    <div class="event">
+      <div class="event-header">
+        <div class="event-date">DECEMBER 2017</div>
+        <div class="event-faction">New Order</div>
+      </div>
+      <div class="event-body">
+        <p><strong>Salil Parekh appointed CEO & MD</strong>, effective January 2, 2018. Former Capgemini executive.</p>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://en.wikipedia.org/wiki/Infosys" target="_blank">&rarr; Wikipedia</a>
+      </div>
+    </div>
+
+    <div class="event sikka-side">
+      <div class="event-header">
+        <div class="event-date">APRIL 2018</div>
+        <div class="event-faction">Sikka Camp &mdash; The Write-Down</div>
+      </div>
+      <div class="event-body">
+        <p><strong>Infosys decides to sell Panaya and Skava.</strong> Classifies assets as &quot;held for sale.&quot; Recognizes <strong>impairment loss of &#8377;118 crore ($18M)</strong> on Panaya. Standalone write-down: <strong>&#8377;589 crore ($90M).</strong></p>
+        <div class="field-question murthy-q">If you are Murthy reading this news in April 2018, do you feel vindicated &mdash; or do you feel that the company you built just admitted defeat on the future?</div>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://timesofindia.indiatimes.com/business/india-business/infosys-decides-to-sell-its-subsidiary-panaya/articleshow/63749052.cms" target="_blank">&rarr; Times of India: Panaya Sale</a>
+        <a class="source-link" href="https://www.thehindu.com/business/Industry/infosys-decides-to-sell-israeli-firm-panaya/article23528179.ece" target="_blank">&rarr; The Hindu</a>
+      </div>
+    </div>
+
+    <div class="event major">
+      <div class="event-header">
+        <div class="event-date">SEPTEMBER 18, 2018</div>
+        <div class="event-faction">The Verdict</div>
+      </div>
+      <div class="event-body">
+        <p><strong>Arbitration tribunal rules in favor of Rajiv Bansal.</strong> Infosys ordered to pay the <strong>remaining &#8377;12.17 crore</strong> of the &#8377;17.38 crore severance. The sole arbitrator &mdash; former Supreme Court judge <strong>R.V. Raveendran</strong> &mdash; dismisses Infosys' charges of breach of confidentiality and data deletion. Rejects Infosys' &#8377;143 crore counter-claim. Orders <strong>12% interest per annum</strong> from January 1, 2018.</p>
+        <div class="transmission board-line">&quot;While the award acknowledges that Infosys had bona fide disputes, its counter-claim for refund of previously paid severance amount of Rs 5.2 crore and damages, has been rejected.&quot; &mdash; Infosys</div>
+        <div class="field-question bansal-q">If you are Bansal, and you just won against the company that built India's IT reputation, what is the one thing you cannot say in your victory statement &mdash; because it would prove Murthy right?</div>
+      </div>
+      <div class="source-bar">
+        <a class="source-link" href="https://qz.com/india/1393795/infosys-has-to-pay-rs12-crore-severance-to-ex-cfo-rajiv-bansal" target="_blank">&rarr; Quartz: Arbitration Win</a>
+        <a class="source-link" href="https://timesofindia.indiatimes.com/business/india-business/infosys-loses-arbitration-to-pay-former-cfo-more-than-rs-12-crore/articleshow/65853634.cms" target="_blank">&rarr; Times of India</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">The Gray Zone &mdash; No One Was Wrong</div>
+  <div class="gray-zone">
+    <div class="gray-header">Intelligence Assessment: All Factions Rational</div>
+
+    <div class="gray-entry">
+      <div class="gray-who sikka-c"><span class="dot" style="background:var(--sikka)"></span> Sikka Was Not Wrong</div>
+      <div class="gray-text">He was trying to transform a body-shopping IT services firm into an <strong>AI-first technology company</strong>. He pushed automation, design thinking, and product-led growth. He gave iPhones to 3,000 employees. He let people wear jeans. He acquired Panaya and Skava to build IP. He was the highest-paid CEO in Indian IT because the board believed he was worth it. He was scoring on <strong>technological transformation and market relevance</strong>.</div>
+    </div>
+
+    <div class="gray-entry">
+      <div class="gray-who murthy-c"><span class="dot" style="background:var(--murthy)"></span> Murthy Was Not Wrong</div>
+      <div class="gray-text">He had built Infosys on <strong>&quot;compassionate capitalism,&quot;</strong> transparency, and values. A &#8377;17.38 crore severance to a departing CFO when employees got only 80% variable pay violated everything Infosys stood for. A $200M acquisition with whistleblower allegations of insider benefit demanded full disclosure &mdash; not a summary press release. The board's refusal to release investigation details was the opposite of the <strong>&quot;when in doubt, disclose&quot;</strong> culture he had built. He was scoring on <strong>founder values, transparency, and institutional identity</strong>.</div>
+    </div>
+
+    <div class="gray-entry">
+      <div class="gray-who board-c"><span class="dot" style="background:var(--board)"></span> The Board Was Not Wrong</div>
+      <div class="gray-text">They had hired lawyers (Gibson Dunn, Cyril Amarchand Mangaldas, Latham & Watkins). Three independent investigations found no evidence of wrongdoing. They had a <strong>fiduciary duty</strong> to protect the company from reputational damage. Releasing every email and every conversation would destroy executive privilege and make future CEOs impossible to hire. They were scoring on <strong>legal protection and fiduciary duty</strong>.</div>
+    </div>
+
+    <div class="gray-entry">
+      <div class="gray-who neutral-c"><span class="dot" style="background:var(--dim)"></span> Bansal Was Not Wrong</div>
+      <div class="gray-text">He had a <strong>signed contract</strong>. The arbitrator agreed. He got his &#8377;17.38 crore. He was scoring on <strong>contractual entitlement</strong>.</div>
+    </div>
+
+    <div class="gray-entry">
+      <div class="gray-who blood-c"><span class="dot" style="background:var(--blood)"></span> The Whistleblower Was Not Wrong</div>
+      <div class="gray-text">The allegations were <strong>specific, detailed, and involved named people and named transactions</strong>. They were scoring on <strong>accountability and institutional integrity</strong>.</div>
+    </div>
+
+    <div class="gray-entry" style="background:rgba(212,160,23,0.03)">
+      <div class="gray-who" style="color:var(--amber)"><span class="dot" style="background:var(--amber)"></span> The Assessment</div>
+      <div class="gray-text"><strong>Everyone was scoring on a different board.</strong> There was no right answer. There was only the move that ended Sikka's game.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Casualty Report &mdash; The Numbers</div>
+  <div class="casualty-grid">
+    <div class="casualty"><div class="casualty-num">$200M</div><div class="casualty-label">Panaya acquisition<br>(Feb 2015)</div></div>
+    <div class="casualty"><div class="casualty-num">$120M</div><div class="casualty-label">Skava acquisition<br>(Apr 2015)</div></div>
+    <div class="casualty"><div class="casualty-num">$11M</div><div class="casualty-label">Sikka's annual comp<br>(from Feb 2016)</div></div>
+    <div class="casualty"><div class="casualty-num">23.57%</div><div class="casualty-label">Founder votes for<br>Sikka's reappointment</div></div>
+    <div class="casualty"><div class="casualty-num">&#8377;17.38 Cr</div><div class="casualty-label">Bansal severance<br>(24 months' pay)</div></div>
+    <div class="casualty"><div class="casualty-num">&#8377;5.2 Cr</div><div class="casualty-label">First tranche<br>paid to Bansal</div></div>
+    <div class="casualty"><div class="casualty-num">&#8377;12.17 Cr</div><div class="casualty-label">Balance held back,<br>later ordered paid</div></div>
+    <div class="casualty"><div class="casualty-num">$1M</div><div class="casualty-label">Kennedy's special<br>12-month severance</div></div>
+    <div class="casualty"><div class="casualty-num">$10B</div><div class="casualty-label">Infosys revenue<br>in 2016</div></div>
+    <div class="casualty"><div class="casualty-num">$20B</div><div class="casualty-label">Sikka's 2020 target<br>(scrapped June 2017)</div></div>
+    <div class="casualty"><div class="casualty-num">&#8377;118 Cr</div><div class="casualty-label">Impairment loss<br>on Panaya (Apr 2018)</div></div>
+    <div class="casualty"><div class="casualty-num">&#8377;589 Cr</div><div class="casualty-label">Standalone write-down<br>on Panaya investment</div></div>
+    <div class="casualty"><div class="casualty-num">12%</div><div class="casualty-label">Interest per annum<br>on delayed payment</div></div>
+    <div class="casualty"><div class="casualty-num">~$45B</div><div class="casualty-label">Estimated value of<br>OpenAI stake missed</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Intercepted Transmissions &mdash; Primary Documents</div>
+
+  <div class="intel-file open">
+    <div class="intel-header" onclick="this.parentElement.classList.toggle('open')">
+      <span><span class="file-icon">&#128196;</span> FILE-001: Sikka's Resignation Letter &mdash; Aug 18, 2017</span>
+      <span class="chevron">&#9662;</span>
+    </div>
+    <div class="intel-content">
+      <div class="transmission">&quot;Over the last many months and quarters, we have all been besieged by false, baseless, malicious, and increasingly personal attacks. Allegations that have been repeatedly proven false and baseless by multiple, independent investigations. But despite this, the attacks continue, and worse still, amplified by the very people from whom we all expected the most steadfast support in this great transformation.&quot;</div>
+      <div class="transmission">&quot;It is clear to me that despite our successes over the last three years, and the powerful seeds of innovation that we have sown, I cannot carry out my job as CEO and continue to create value, while also constantly defending against unrelenting, baseless/malicious and increasingly personal attacks.&quot;</div>
+      <div class="source-bar" style="border-top:none;padding:0">
+        <a class="source-link" href="https://timesofindia.indiatimes.com/business/india-business/full-text-vishal-sikkas-resignation-letter/articleshow/60113867.cms" target="_blank">&rarr; Times of India: Full Text</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="intel-file">
+    <div class="intel-header" onclick="this.parentElement.classList.toggle('open')">
+      <span><span class="file-icon">&#128196;</span> FILE-002: Murthy's Letter to Advisors &mdash; Aug 14, 2017</span>
+      <span class="chevron">&#9662;</span>
+    </div>
+    <div class="intel-content">
+      <div class="transmission murthy-line">&quot;What do some well-meaning shareholders and I want from the Infosys board? Not money, not position for our children and not power. We just do not want the board to drive this institution to death through serious governance deficits in our own life time.&quot;</div>
+      <div class="transmission murthy-line">&quot;The best way to ensure longevity of any corporation is by pursing good governance. Businesses will go through ups and downs and that is par for the course; but bad governance is not.&quot;</div>
+      <div class="transmission murthy-line">&quot;I have not commented on Dr. Vishal Sikka's work as is made out by the media. I have not commented about his strategy or its execution since I have not seen him operate from the vantage point of an Infosys board member. I simply do not believe in commenting on anybody without data and facts. My problem is with governance at Infosys. I believe that the fault lies with the current board.&quot;</div>
+      <div class="transmission murthy-line">&quot;Somehow, public has been made to think by some vested interests that this is a fight between Vishal and us, the founders and the early adopters. That is simply not true.&quot;</div>
+      <div class="transmission alert-line">&quot;The general belief among a large number of shareholders is that the current attitude of the board is a clear example of the worst board governance in India's corporate history.&quot;</div>
+      <div class="source-bar" style="border-top:none;padding:0">
+        <a class="source-link" href="https://www.forbesindia.com/article/special/narayana-murthy-makes-public-letters-to-advisors-and-infosys-board/47917/1" target="_blank">&rarr; Forbes India: Full Letters</a>
+        <a class="source-link" href="https://www.thehindu.com/incoming/full-text-of-narayana-murthys-aug-14-letter-slamming-infosys-board/article62044213.ece" target="_blank">&rarr; The Hindu: Full Text</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="intel-file">
+    <div class="intel-header" onclick="this.parentElement.classList.toggle('open')">
+      <span><span class="file-icon">&#128196;</span> FILE-003: Board Statement Blaming Murthy &mdash; Aug 18, 2017</span>
+      <span class="chevron">&#9662;</span>
+    </div>
+    <div class="intel-content">
+      <div class="transmission board-line">&quot;Mr. Murthy's campaign against the board and the company has had the unfortunate effect to undermine the company's efforts to transform itself. The board has been engaged in a dialogue with the founder to resolve his concerns over the course of a year, trying earnestly to find feasible solutions within the boundaries of law and without compromising its independence. These dialogues have unfortunately not been successful.&quot;</div>
+      <div class="transmission alert-line">&quot;Murthy's continuous assault is the primary reason that Vishal Sikka has resigned despite strong board support.&quot;</div>
+      <div class="source-bar" style="border-top:none;padding:0">
+        <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">&rarr; Quartz: Board Statement</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="intel-file">
+    <div class="intel-header" onclick="this.parentElement.classList.toggle('open')">
+      <span><span class="file-icon">&#128196;</span> FILE-004: Murthy's Response to Board &mdash; Aug 18, 2017</span>
+      <span class="chevron">&#9662;</span>
+    </div>
+    <div class="intel-content">
+      <div class="transmission murthy-line">&quot;I am extremely anguished by the allegations, tone and tenor of statements. I voluntarily left the Board in 2014 and am not seeking any money, position for children or power. My concern primarily was the deteriorating standard of corporate governance which I have repeatedly brought to the notice of the Infosys board.&quot;</div>
+      <div class="transmission murthy-line">&quot;It is below my dignity to respond to such baseless insinuations. However, several shareholders who have read the whistle-blower report have told me that it is hard to believe a report produced by a set of lawyers hired by a set of accused, giving a clean chit to the accused, and the accused refusing to disclose why they got a clean chit! They say that this is not the way an impartial and objective investigation should be held.&quot;</div>
+      <div class="source-bar" style="border-top:none;padding:0">
+        <a class="source-link" href="https://www.thenewsminute.com/news/narayana-murthy-hits-back-infosys-says-below-my-dignity-respond-baseless-insinuations-66995" target="_blank">&rarr; The News Minute: Full Response</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="intel-file">
+    <div class="intel-header" onclick="this.parentElement.classList.toggle('open')">
+      <span><span class="file-icon">&#128196;</span> FILE-005: Murthy's 12 Questions to the Board &mdash; July 8, 2017</span>
+      <span class="chevron">&#9662;</span>
+    </div>
+    <div class="intel-content">
+      <ol style="margin:0 0 0 20px;color:#a0a0a0;font-size:13.5px;line-height:2.2">
+        <li>What were Rajiv Bansal's objections to the Panaya acquisition?</li>
+        <li>Can the company deny that any employee/relative benefited from Panaya?</li>
+        <li>Can the company certify Panaya was not overvalued?</li>
+        <li>Was there an email from David Kennedy to Sikka saying he could no longer hide the Bansal agreement?</li>
+        <li>Did KPMG auditors unearth this email?</li>
+        <li>Did the board know about the Bansal agreement in October 2015 or only in January 2016?</li>
+        <li>Did Seshasayee lie at the 2016 AGM about Bansal having &quot;special secret competitive data&quot;?</li>
+        <li>Why was David Kennedy given a special severance after hiding information from the board?</li>
+        <li>Why was Kennedy not dismissed in January 2016 when the hiding was discovered, but allowed to resign in December 2016?</li>
+        <li>Did the investigation scope protect the board?</li>
+        <li>Were CAM, LW, and KPMG complicit?</li>
+        <li>Has the culture changed to reward people who hide information from the board?</li>
+      </ol>
+      <div class="source-bar" style="border-top:none;padding:12px 0 0">
+        <a class="source-link" href="https://www.forbesindia.com/article/special/narayana-murthy-makes-public-letters-to-advisors-and-infosys-board/47917/1" target="_blank">&rarr; Forbes India: Full Letters with 12 Questions</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="intel-file">
+    <div class="intel-header" onclick="this.parentElement.classList.toggle('open')">
+      <span><span class="file-icon">&#128196;</span> FILE-006: Murthy at AGM &mdash; &quot;Silence Would Have Mortally Wounded Infosys&quot;</span>
+      <span class="chevron">&#9662;</span>
+    </div>
+    <div class="intel-content">
+      <div class="transmission murthy-line">&quot;Silence would have mortally wounded Infosys. I had no other way to protect the values of this great company.&quot;</div>
+      <div class="source-bar" style="border-top:none;padding:0">
+        <a class="source-link" href="https://timesofindia.indiatimes.com/business/india-business/silence-would-have-mortally-wounded-infosys-murthy/articleshow/60284932.cms" target="_blank">&rarr; Times of India: Murthy's Investor Call</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">The Triad &mdash; Three Statements. Same Day. Same Company.</div>
+  <div class="triad">
+    <div class="triad-card s1">
+      <div class="triad-quote">&quot;I have not commented on Dr. Vishal Sikka's work. My problem is with governance at Infosys. Somehow, the public has been made to think that this is a fight between Vishal and us. That is simply not true.&quot;</div>
+      <div class="triad-who">&mdash; Narayana Murthy, August 14, 2017</div>
+    </div>
+    <div class="triad-card s2">
+      <div class="triad-quote">&quot;Over the last many months, we have all been besieged by false, baseless, malicious, and increasingly personal attacks&hellip; amplified by the very people from whom we all expected the most steadfast support.&quot;</div>
+      <div class="triad-who">&mdash; Vishal Sikka, August 18, 2017</div>
+    </div>
+    <div class="triad-card s3">
+      <div class="triad-quote">&quot;Murthy's continuous assault is the primary reason that Vishal Sikka has resigned despite strong board support.&quot;</div>
+      <div class="triad-who">&mdash; Infosys Board, August 18, 2017</div>
+    </div>
+  </div>
+  <p style="text-align:center;margin-top:20px;color:var(--dim);font-family:'Playfair Display',serif;font-size:16px;font-style:italic">Three different scoreboards. Three different wars. One company caught in the crossfire.</p>
+</div>
+
+<div class="section">
+  <div class="section-title">Intelligence Archive &mdash; All Sources</div>
+  <div style="display:grid;gap:10px">
+    <a class="source-link" href="https://qz.com/india/1056925/a-timeline-of-vishal-sikka-at-infosys-from-a-high-profile-outsider-to-dejected-leader" target="_blank">01. Quartz &mdash; Master Timeline with Quotes</a>
+    <a class="source-link" href="https://timesofindia.indiatimes.com/business/india-business/full-text-vishal-sikkas-resignation-letter/articleshow/60113867.cms" target="_blank">02. Times of India &mdash; Sikka Resignation Letter (Full Text)</a>
+    <a class="source-link" href="https://www.forbesindia.com/article/special/narayana-murthy-makes-public-letters-to-advisors-and-infosys-board/47917/1" target="_blank">03. Forbes India &mdash; Murthy's Letters to Advisors & Board (Full Text)</a>
+    <a class="source-link" href="https://www.thehindu.com/incoming/full-text-of-narayana-murthys-aug-14-letter-slamming-infosys-board/article62044213.ece" target="_blank">04. The Hindu &mdash; Murthy's Aug 14 Letter (Full Text)</a>
+    <a class="source-link" href="https://www.thenewsminute.com/news/narayana-murthy-hits-back-infosys-says-below-my-dignity-respond-baseless-insinuations-66995" target="_blank">05. The News Minute &mdash; Murthy Response to Board</a>
+    <a class="source-link" href="https://timesofindia.indiatimes.com/business/india-business/silence-would-have-mortally-wounded-infosys-murthy/articleshow/60284932.cms" target="_blank">06. Times of India &mdash; Murthy Investor Call</a>
+    <a class="source-link" href="https://qz.com/india/1393795/infosys-has-to-pay-rs12-crore-severance-to-ex-cfo-rajiv-bansal" target="_blank">07. Quartz &mdash; Bansal Arbitration Win</a>
+    <a class="source-link" href="https://timesofindia.indiatimes.com/business/india-business/infosys-loses-arbitration-to-pay-former-cfo-more-than-rs-12-crore/articleshow/65853634.cms" target="_blank">08. Times of India &mdash; Bansal Ordered Full Severance</a>
+    <a class="source-link" href="https://timesofindia.indiatimes.com/business/india-business/infosys-decides-to-sell-its-subsidiary-panaya/articleshow/63749052.cms" target="_blank">09. Times of India &mdash; Panaya Sale Decision</a>
+    <a class="source-link" href="https://www.thehindu.com/business/Industry/infosys-decides-to-sell-israeli-firm-panaya/article23528179.ece" target="_blank">10. The Hindu &mdash; Panaya Sale & Board Statement</a>
+    <a class="source-link" href="https://chambers.com/articles/executive-compensation-in-india-summing-up-the-infosys-controversy" target="_blank">11. Chambers &mdash; Executive Compensation Analysis</a>
+    <a class="source-link" href="https://www.managementstudyguide.com/panaya-acquisition.htm" target="_blank">12. Management Study Guide &mdash; Panaya Controversy</a>
+    <a class="source-link" href="https://en.wikipedia.org/wiki/Infosys" target="_blank">13. Wikipedia &mdash; Infosys History & CEO List</a>
+    <a class="source-link" href="https://www.scribd.com/document/395793470/OB-Report-Vishal-Sikka-s-Ouster-From-Infosys" target="_blank">14. Scribd &mdash; Academic OB Case Study</a>
+  </div>
+</div>
+
+<div class="footer">
+  <p>COMPILED FROM PUBLICLY AVAILABLE SOURCES. NO ANALYSIS ADDED. NO CONCLUSIONS DRAWN.</p>
+  <p style="margin-top:8px">FOR CLASSROOM USE. LAST UPDATED: AUGUST 2026.</p>
+</div>
+
+</div>
+
+</body>
+</html>
